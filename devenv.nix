@@ -12,10 +12,6 @@
       curl
     ];
 
-    env = {
-      MAVEN_OPTS = "-Xmx1024m";
-    };
-    
     languages.java = {
       enable = true;
       maven.enable = true;
