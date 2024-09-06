@@ -5,8 +5,6 @@ import com.adobe.bookstore.bookstock.exceptions.NonExistantBookException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 /** Service class for managing {@link BookStock} objects. */
 @Service
 public class BookStockService {
