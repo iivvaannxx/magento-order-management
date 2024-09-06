@@ -3,9 +3,11 @@ package com.adobe.bookstore.orders;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.dto.OrderDTO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 public class OrderResource {
+    
+    /** The logger instance for this class. */
+    private static final Logger logger = LoggerFactory.getLogger(OrderResource.class);
 
     /** The singleton instance of {@link OrderService}. */
     private final OrderService orderService;
@@ -50,22 +55,14 @@ public class OrderResource {
     }
     
     /**
-     * Returns the {@link OrderDTO} for the {@link Order} with the given identifier.
-     * @param orderId The identifier of the order to retrieve.
-     */
-    @GetMapping("{orderId}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable String orderId) {
-        Order order = orderService.getOrderById(orderId);
-        return ResponseEntity.ok(orderMapper.toDto(order));
-    }
-    
-    /**
      * Creates a new {@link Order} with the given data.
      * @param order The {@link NewOrderDTO} data to create the order.
      */
     @PostMapping
     public ResponseEntity<String> newOrder(@RequestBody NewOrderDTO order) {
         Order newOrder = orderService.createOrder(order);
+        logger.info("Created new order: {}", newOrder.getId());
+        
         return ResponseEntity.ok(newOrder.getId());
     }
 }

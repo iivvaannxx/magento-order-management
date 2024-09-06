@@ -4,18 +4,27 @@ import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
 import com.adobe.bookstore.bookstock.BookStock;
 import com.adobe.bookstore.bookstock.BookStockService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
-
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistantOrderException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /** Service class for managing {@link Order} objects. */
 @Service
 public class OrderService {
+    
+    /** The logger instance for this class. */
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     
     /** The singleton instance of {@link OrderRepository}. */
     private final OrderRepository orderRepository;
@@ -59,6 +68,7 @@ public class OrderService {
     public Order createOrder(NewOrderDTO orderDto) throws InsufficientStockException {
         
         Order order = new Order();
+        Map<String, Integer> newBookStocks = new HashMap<>();
         
         // Check if there are enough stocks to fulfill the order.
         for (BookOrderDTO bookOrderDto : orderDto.books()) {
@@ -73,9 +83,28 @@ public class OrderService {
             }
             
             order.addBook(book, orderQuantity);
-            book.setQuantity(stock - orderQuantity);
+            newBookStocks.put(book.getId(), stock - orderQuantity);
         }
         
-        return orderRepository.save(order);
+        // Save the order immediately.
+        Order savedOrder = orderRepository.save(order);
+        String orderId = savedOrder.getId();
+        
+        // And update the stocks asynchronously.
+        CompletableFuture.runAsync(() -> {
+           try {
+               // Update the stocks of the books in the order.
+               logger.info("Starting async stock update for order: {}", orderId);
+               newBookStocks.forEach(bookStockService::updateBookStock);
+               logger.info("Finished async stock update for order: {}", orderId);
+               
+           } catch (Exception e) {
+               // Here we would need to handle this manually.
+               // Or we could use some retry mechanism, or compensating transactions.
+               logger.error("Error updating book stocks for order {}", orderId, e);
+           }
+        });
+        
+        return savedOrder;
     }
 }

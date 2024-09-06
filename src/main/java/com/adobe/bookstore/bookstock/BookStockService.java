@@ -2,6 +2,7 @@ package com.adobe.bookstore.bookstock;
 
 import com.adobe.bookstore.bookstock.exceptions.NonExistantBookException;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class BookStockService {
     
     /**
      * Creates a new instance of the {@link BookStockService} class.
+     *
      * @param bookStockRepository An instance of {@link BookStockRepository}.
      */
     @Autowired
@@ -30,5 +32,28 @@ public class BookStockService {
     public BookStock getBookById(String bookId) throws NonExistantBookException {
         return bookStockRepository.findById(bookId)
             .orElseThrow(() -> new NonExistantBookException(bookId));
+    }
+    
+    /**
+     * Updates the quantity of the {@link BookStock} associated with the given identifier.
+     *
+     * @param bookId   The identifier of the {@link BookStock} to update.
+     * @param quantity The new quantity of the {@link BookStock}.
+     * @throws NonExistantBookException If the {@link BookStock} does not exist.
+     * @throws IllegalArgumentException If the quantity is negative.
+     */
+    @Transactional
+    public void updateBookStock(String bookId, Integer quantity)
+        throws NonExistantBookException, IllegalArgumentException {
+        
+        BookStock bookStock = bookStockRepository.findById(bookId)
+            .orElseThrow(() -> new NonExistantBookException(bookId));
+        
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
+        
+        bookStock.setQuantity(quantity);
+        bookStockRepository.save(bookStock);
     }
 }
