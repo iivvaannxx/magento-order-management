@@ -62,10 +62,7 @@ public class OrderService {
         // Check if there are enough stocks to fulfill the order.
         for (BookOrderDTO bookOrderDto : orderDto.books()) {
             
-            BookStock book = bookStockService
-                .getBookById(bookOrderDto.bookId())
-                .orElseThrow(() -> new IllegalArgumentException("Book not found."));
-            
+            BookStock book = bookStockService.getBookById(bookOrderDto.bookId());
             Integer stock = book.getQuantity();
             Integer orderQuantity = bookOrderDto.quantity();
             

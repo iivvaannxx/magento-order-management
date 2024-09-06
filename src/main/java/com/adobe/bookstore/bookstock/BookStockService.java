@@ -1,5 +1,7 @@
 package com.adobe.bookstore.bookstock;
 
+import com.adobe.bookstore.bookstock.exceptions.NonExistantBookException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +25,12 @@ public class BookStockService {
     
     /**
      * Returns the information of the {@link BookStock} associated with the given identifier.
+     *
      * @param bookId The identifier of the book.
+     * @throws NonExistantBookException If the book does not exist.
      */
-    public Optional<BookStock> getBookById(String bookId) {
-        return bookStockRepository.findById(bookId);
+    public BookStock getBookById(String bookId) throws NonExistantBookException {
+        return bookStockRepository.findById(bookId)
+            .orElseThrow(() -> new NonExistantBookException(bookId));
     }
 }

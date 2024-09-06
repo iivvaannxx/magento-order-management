@@ -31,8 +31,7 @@ public class BookStockResource {
      */
     @GetMapping("{bookId}")
     public ResponseEntity<BookStock> getStockById(@PathVariable String bookId) {
-        return bookStockService.getBookById(bookId)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+        BookStock bookStock = bookStockService.getBookById(bookId);
+        return ResponseEntity.ok(bookStock);
     }
 }
