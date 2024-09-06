@@ -1,3 +1,11 @@
+# Development environment
 .direnv/
 .devenv/
+.idea/
+*.iml
+
+# Build artifacts
 target/
+
+# Local development database
+data/
