@@ -1,6 +1,6 @@
 package com.adobe.bookstore.bookstock;
 
-import com.adobe.bookstore.bookstock.exceptions.NonExistantBookException;
+import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,11 @@ public class BookStockService {
      * Returns the information of the {@link BookStock} associated with the given identifier.
      *
      * @param bookId The identifier of the book.
-     * @throws NonExistantBookException If the book does not exist.
+     * @throws NonExistentBookException If the book does not exist.
      */
-    public BookStock getBookById(String bookId) throws NonExistantBookException {
+    public BookStock getBookById(String bookId) throws NonExistentBookException {
         return bookStockRepository.findById(bookId)
-            .orElseThrow(() -> new NonExistantBookException(bookId));
+            .orElseThrow(() -> new NonExistentBookException(bookId));
     }
     
     /**
@@ -39,15 +39,15 @@ public class BookStockService {
      *
      * @param bookId   The identifier of the {@link BookStock} to update.
      * @param quantity The new quantity of the {@link BookStock}.
-     * @throws NonExistantBookException If the {@link BookStock} does not exist.
+     * @throws NonExistentBookException If the {@link BookStock} does not exist.
      * @throws IllegalArgumentException If the quantity is negative.
      */
     @Transactional
     public void updateBookStock(String bookId, Integer quantity)
-        throws NonExistantBookException, IllegalArgumentException {
+        throws NonExistentBookException, IllegalArgumentException {
         
         BookStock bookStock = bookStockRepository.findById(bookId)
-            .orElseThrow(() -> new NonExistantBookException(bookId));
+            .orElseThrow(() -> new NonExistentBookException(bookId));
         
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity cannot be negative.");

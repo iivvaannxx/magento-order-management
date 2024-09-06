@@ -5,7 +5,7 @@ import com.adobe.bookstore.bookstock.BookStock;
 import com.adobe.bookstore.bookstock.BookStockService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
-import com.adobe.bookstore.orders.exceptions.NonExistantOrderException;
+import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class OrderService {
      */
     public Order getOrderById(String orderId) {
         return orderRepository.findById(orderId)
-            .orElseThrow(() -> new NonExistantOrderException(orderId));
+            .orElseThrow(() -> new NonExistentOrderException(orderId));
     }
     
     /**

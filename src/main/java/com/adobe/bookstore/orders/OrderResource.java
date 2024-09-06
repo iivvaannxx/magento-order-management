@@ -4,6 +4,7 @@ import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.dto.OrderDTO;
 import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class OrderResource {
      * @param order The {@link NewOrderDTO} data to create the order.
      */
     @PostMapping
-    public ResponseEntity<SuccessfulOrderDTO> newOrder(@RequestBody NewOrderDTO order) {
+    public ResponseEntity<SuccessfulOrderDTO> newOrder(@Valid @RequestBody NewOrderDTO order) {
         Order newOrder = orderService.createOrder(order);
         logger.info("Created new order: {}", newOrder.getId());
         

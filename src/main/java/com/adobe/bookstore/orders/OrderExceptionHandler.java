@@ -1,7 +1,7 @@
 package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
-import com.adobe.bookstore.orders.exceptions.NonExistantOrderException;
+import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class OrderExceptionHandler {
         
         logger.error(ex.getMessage());
         return Map.of(
-            "error", "Not enough stock for book.",
+            "error", "Not enough stock for book",
             "bookId", ex.getBookId(),
             "requestedQuantity", ex.getRequestedQuantity(),
             "availableQuantity", ex.getAvailableQuantity()
@@ -38,16 +38,16 @@ public class OrderExceptionHandler {
     }
     
     /**
-     * Handles the {@link NonExistantOrderException} and returns a 404 Not Found response.
-     * @param ex The {@link NonExistantOrderException} to handle.
+     * Handles the {@link NonExistentOrderException} and returns a 404 Not Found response.
+     * @param ex The {@link NonExistentOrderException} to handle.
      */
-    @ExceptionHandler(NonExistantOrderException.class)
+    @ExceptionHandler(NonExistentOrderException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // We return a 404 Not Found to inform that the resource does not exist.
-    public Map<String, Object> handleNonExistantOrderException(NonExistantOrderException ex) {
+    public Map<String, Object> handleNonExistantOrderException(NonExistentOrderException ex) {
         
         logger.error(ex.getMessage());
         return Map.of(
-            "error", ex.getMessage(),
+            "error", "Order does not exist",
             "orderId", ex.getOrderId()
         );
     }

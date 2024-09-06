@@ -1,6 +1,6 @@
 package com.adobe.bookstore.bookstock;
 
-import com.adobe.bookstore.bookstock.exceptions.NonExistantBookException;
+import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
 import com.adobe.bookstore.orders.OrderExceptionHandler;
 
 import org.slf4j.Logger;
@@ -21,16 +21,16 @@ public class BookStockExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(OrderExceptionHandler.class);
     
     /**
-     * Handles the {@link NonExistantBookException} and returns a 404 Not Found response.
-     * @param ex The {@link NonExistantBookException} to handle.
+     * Handles the {@link NonExistentBookException} and returns a 404 Not Found response.
+     * @param ex The {@link NonExistentBookException} to handle.
      */
-    @ExceptionHandler(NonExistantBookException.class)
+    @ExceptionHandler(NonExistentBookException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // We return a 404 Not Found to inform that the resource does not exist.
-    public Map<String, Object> handleNonExistantBookException(NonExistantBookException ex) {
+    public Map<String, Object> handleNonExistantBookException(NonExistentBookException ex) {
         
         logger.error(ex.getMessage());
         return Map.of(
-            "error", ex.getMessage(),
+            "error", "Book does not exist",
             "bookId", ex.getBookId()
         );
     }
