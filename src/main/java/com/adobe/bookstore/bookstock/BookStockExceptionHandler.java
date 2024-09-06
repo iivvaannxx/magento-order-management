@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/** Defines the exception handler for the {@link com.adobe.bookstore.bookstock} exceptions. */
-@ControllerAdvice("com.adobe.bookstore.bookstock")
+/** Defines the exception handler for the {@link com.adobe.bookstore.bookstock.exceptions}. */
+@ControllerAdvice
 public class BookStockExceptionHandler {
     
     /**

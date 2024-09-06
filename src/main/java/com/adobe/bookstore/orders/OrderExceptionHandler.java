@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/** Defines the exception handler for the {@link com.adobe.bookstore.orders} exceptions. */
-@ControllerAdvice("com.adobe.bookstore.orders")
+/** Defines the exception handler for the {@link com.adobe.bookstore.orders.exceptions}. */
+@ControllerAdvice
 public class OrderExceptionHandler {
     
     /**
