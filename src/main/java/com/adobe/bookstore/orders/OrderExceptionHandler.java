@@ -1,6 +1,7 @@
 package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
+import com.adobe.bookstore.orders.exceptions.NonExistantOrderException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +21,16 @@ public class OrderExceptionHandler {
     public ResponseEntity<String> handleInsufficientStockException(InsufficientStockException ex) {
         // We return a 409 Conflict to emphasize that the request conflicts with the current state of the resource.
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    
+    /**
+     * Handles the {@link NonExistantOrderException} and returns a 404 Not Found response.
+     * @param ex The {@link NonExistantOrderException} to handle.
+     */
+    @ExceptionHandler(NonExistantOrderException.class)
+    public ResponseEntity<String> handleNonExistantOrderException(
+        NonExistantOrderException ex) {
+        // We return a 404 Not Found to inform that the resource does not exist.
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

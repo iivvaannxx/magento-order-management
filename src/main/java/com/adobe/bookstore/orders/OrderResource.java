@@ -55,10 +55,8 @@ public class OrderResource {
      */
     @GetMapping("{orderId}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable String orderId) {
-        return orderService.getOrderById(orderId)
-            .map(orderMapper::toDto)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+        Order order = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderMapper.toDto(order));
     }
     
     /**

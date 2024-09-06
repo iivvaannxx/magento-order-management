@@ -6,12 +6,12 @@ import com.adobe.bookstore.bookstock.BookStockService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
+import com.adobe.bookstore.orders.exceptions.NonExistantOrderException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /** Service class for managing {@link Order} objects. */
 @Service
@@ -44,8 +44,9 @@ public class OrderService {
      * Returns the {@link Order} with the given identifier.
      * @param orderId The identifier of the {@link Order} to retrieve.
      */
-    public Optional<Order> getOrderById(String orderId) {
-        return orderRepository.findById(orderId);
+    public Order getOrderById(String orderId) {
+        return orderRepository.findById(orderId)
+            .orElseThrow(() -> new NonExistantOrderException(orderId));
     }
     
     /**
