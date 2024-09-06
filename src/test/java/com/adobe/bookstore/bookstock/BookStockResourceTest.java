@@ -23,7 +23,6 @@ class BookStockResourceTest {
     @Sql(statements = "INSERT INTO book_stock (id, name, quantity) VALUES ('12345-67890', 'some book', 7)")
     public void shouldReturnCurrentStock() {
         var result = restTemplate.getForObject("http://localhost:" + port + "/books_stock/12345-67890", BookStock.class);
-
         assertThat(result.getQuantity()).isEqualTo(7);
     }
 }
