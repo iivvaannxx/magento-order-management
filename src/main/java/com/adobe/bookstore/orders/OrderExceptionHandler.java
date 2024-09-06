@@ -3,24 +3,37 @@ package com.adobe.bookstore.orders;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistantOrderException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Map;
+
 /** Defines the exception handler for the {@link com.adobe.bookstore.orders.exceptions}. */
-@ControllerAdvice
+@RestControllerAdvice
 public class OrderExceptionHandler {
+    
+    /** The logger instance for this class. */
+    private static final Logger logger = LoggerFactory.getLogger(OrderExceptionHandler.class);
     
     /**
      * Handles the {@link InsufficientStockException} and returns a 409 Conflict response.
      * @param ex The {@link InsufficientStockException} to handle.
      */
     @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<String> handleInsufficientStockException(InsufficientStockException ex) {
-        // We return a 409 Conflict to emphasize that the request conflicts with the current state of the resource.
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    @ResponseStatus(HttpStatus.CONFLICT) // We return a 409 Conflict to emphasize that the request conflicts with the current state of the resource.
+    public Map<String, Object> handleInsufficientStockException(InsufficientStockException ex) {
+        
+        logger.error(ex.getMessage());
+        return Map.of(
+            "error", "Not enough stock for book.",
+            "bookId", ex.getBookId(),
+            "requestedQuantity", ex.getRequestedQuantity(),
+            "availableQuantity", ex.getAvailableQuantity()
+        );
     }
     
     /**
@@ -28,9 +41,13 @@ public class OrderExceptionHandler {
      * @param ex The {@link NonExistantOrderException} to handle.
      */
     @ExceptionHandler(NonExistantOrderException.class)
-    public ResponseEntity<String> handleNonExistantOrderException(
-        NonExistantOrderException ex) {
-        // We return a 404 Not Found to inform that the resource does not exist.
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    @ResponseStatus(HttpStatus.NOT_FOUND) // We return a 404 Not Found to inform that the resource does not exist.
+    public Map<String, Object> handleNonExistantOrderException(NonExistantOrderException ex) {
+        
+        logger.error(ex.getMessage());
+        return Map.of(
+            "error", ex.getMessage(),
+            "orderId", ex.getOrderId()
+        );
     }
 }

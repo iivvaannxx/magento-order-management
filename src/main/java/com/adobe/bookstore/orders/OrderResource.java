@@ -3,6 +3,7 @@ package com.adobe.bookstore.orders;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.dto.OrderDTO;
 
+import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,14 +56,24 @@ public class OrderResource {
     }
     
     /**
+     * Returns the {@link OrderDTO} for the {@link Order} with the given identifier.
+     * @param orderId The identifier of the order to retrieve.
+     */
+    @GetMapping("{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable String orderId) {
+        Order order = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderMapper.toDto(order));
+    }
+    
+    /**
      * Creates a new {@link Order} with the given data.
      * @param order The {@link NewOrderDTO} data to create the order.
      */
     @PostMapping
-    public ResponseEntity<String> newOrder(@RequestBody NewOrderDTO order) {
+    public ResponseEntity<SuccessfulOrderDTO> newOrder(@RequestBody NewOrderDTO order) {
         Order newOrder = orderService.createOrder(order);
         logger.info("Created new order: {}", newOrder.getId());
         
-        return ResponseEntity.ok(newOrder.getId());
+        return ResponseEntity.ok(new SuccessfulOrderDTO(newOrder.getId()));
     }
 }
