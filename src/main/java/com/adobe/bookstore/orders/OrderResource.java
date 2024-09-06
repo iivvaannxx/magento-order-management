@@ -2,8 +2,8 @@ package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.dto.OrderDTO;
-
 import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
