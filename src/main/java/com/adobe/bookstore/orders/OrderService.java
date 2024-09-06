@@ -5,6 +5,7 @@ import com.adobe.bookstore.bookstock.BookStock;
 import com.adobe.bookstore.bookstock.BookStockService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 
+import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,10 +50,12 @@ public class OrderService {
     
     /**
      * Creates a new {@link Order} and returns it if the operation is successful.
+     *
      * @param orderDto The {@link NewOrderDTO} data to create the order.
+     * @throws InsufficientStockException If there are not enough stocks to fulfill the order.
      */
     @Transactional
-    public Order createOrder(NewOrderDTO orderDto) {
+    public Order createOrder(NewOrderDTO orderDto) throws InsufficientStockException {
         
         Order order = new Order();
         
@@ -68,7 +71,7 @@ public class OrderService {
             
             // We can't fulfill the order if there are not enough stocks.
             if (stock < orderQuantity) {
-                throw new IllegalArgumentException("Not enough stock to fulfill the order.");
+                throw new InsufficientStockException(book.getId(), orderQuantity, stock);
             }
             
             order.addBook(book, orderQuantity);
