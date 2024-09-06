@@ -1,7 +1,6 @@
 package com.adobe.bookstore.bookstock;
 
 import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
-import com.adobe.bookstore.orders.OrderExceptionHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import java.util.Map;
 public class BookStockExceptionHandler {
     
     /** The logger instance for this class. */
-    private static final Logger logger = LoggerFactory.getLogger(OrderExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(BookStockExceptionHandler.class);
     
     /**
      * Handles the {@link NonExistentBookException} and returns a 404 Not Found response.
@@ -34,5 +33,4 @@ public class BookStockExceptionHandler {
             "bookId", ex.getBookId()
         );
     }
-    
 }
