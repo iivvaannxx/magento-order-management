@@ -1,11 +1,15 @@
 package com.adobe.bookstore.bookstock;
 
+import com.adobe.bookstore.bookorder.BookOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.Set;
 
 /** Defines the entity for book stock. */
 @Entity
@@ -25,6 +29,10 @@ public class BookStock {
     /** The current stock of the book. */
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+    
+    /** The set of {@link BookOrder} that have this {@link BookStock} as an item. */
+    @OneToMany(mappedBy = "book")
+    private Set<BookOrder> bookOrders;
     
     /** Returns the unique identifier of the book. */
     public String getId() {
