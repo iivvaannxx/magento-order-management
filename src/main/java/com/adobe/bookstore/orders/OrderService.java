@@ -1,5 +1,6 @@
 package com.adobe.bookstore.orders;
 
+import com.adobe.bookstore.bookorder.BookOrder;
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
 import com.adobe.bookstore.bookstock.BookStock;
 import com.adobe.bookstore.bookstock.BookStockService;
@@ -10,6 +11,8 @@ import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +86,8 @@ public class OrderService {
         throw new InsufficientStockException(book.getId(), orderQuantity, stock);
       }
 
-      order.addBook(book, orderQuantity);
-      newBookStocks.put(book.getId(), stock - orderQuantity);
+      Integer newStock = addBookToOrder(order, book, orderQuantity);
+      newBookStocks.put(book.getId(), newStock);
     }
 
     // Save the order immediately.
@@ -92,6 +95,41 @@ public class OrderService {
     String orderId = savedOrder.getId();
 
     // And update the stocks asynchronously.
+    updateBookStocksAsync(orderId, newBookStocks);
+    return savedOrder;
+  }
+
+  /**
+   * Adds a {@link BookStock} to the order and returns the stock amount that needs to be left after
+   * the addition.
+   *
+   * @param order The {@link Order} to which the book belongs.
+   * @param bookStock The {@link BookStock} to be added.
+   * @param quantity The quantity of books to be added.
+   */
+  private Integer addBookToOrder(Order order, BookStock bookStock, Integer quantity) {
+
+    // Check if the book is already in the order.
+    Set<BookOrder> books = order.getBooks();
+    Optional<BookOrder> existingBook =
+        books.stream().filter(b -> b.getBook().equals(bookStock)).findFirst();
+
+    // If the book is already in the order, update the quantity.
+    // Otherwise, add the book to the order.
+    existingBook.ifPresentOrElse(
+        bookOrder -> bookOrder.setQuantity(bookOrder.getQuantity() + quantity),
+        () -> books.add(new BookOrder(order, bookStock, quantity)));
+
+    return bookStock.getQuantity() - quantity;
+  }
+
+  /**
+   * Updates the stocks of the books in a recently placed order asynchronously.
+   *
+   * @param orderId The identifier of the order.
+   * @param newBookStocks The new stocks of the books in the order.
+   */
+  private void updateBookStocksAsync(String orderId, Map<String, Integer> newBookStocks) {
     CompletableFuture.runAsync(
         () -> {
           try {
@@ -106,7 +144,5 @@ public class OrderService {
             logger.error("Error updating book stocks for order {}", orderId, e);
           }
         });
-
-    return savedOrder;
   }
 }
