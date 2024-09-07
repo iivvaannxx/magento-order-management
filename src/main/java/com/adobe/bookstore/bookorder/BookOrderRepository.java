@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository;
 
 /** Defines the repository of {@link BookOrder} to manage CRUD operations. */
 @Repository
-public interface BookOrderRepository extends JpaRepository<BookOrder, Long> { }
+public interface BookOrderRepository extends JpaRepository<BookOrder, Long> {}
