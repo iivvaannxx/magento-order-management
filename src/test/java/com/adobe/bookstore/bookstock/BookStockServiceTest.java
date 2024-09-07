@@ -2,6 +2,7 @@ package com.adobe.bookstore.bookstock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,29 +11,26 @@ import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /** Unit tests for the {@link BookStockService} class. */
 class BookStockServiceTest {
 
   /** The instance of {@link BookStockService} used in the tests. */
-  @InjectMocks private BookStockService bookStockService;
+  private BookStockService bookStockService;
 
   /** The mocked instance of {@link BookStockRepository} used in the tests. */
-  @Mock private BookStockRepository bookStockRepository;
+  private BookStockRepository bookStockRepository;
 
   /** Runs before each test. */
   @BeforeEach
   void setUp() {
-    // Initialize the mocks.
-    MockitoAnnotations.openMocks(this);
+    bookStockRepository = mock(BookStockRepository.class);
+    bookStockService = new BookStockService(bookStockRepository);
   }
 
   /** Tests that the {@link BookStockService#getBookById(String)} method works correctly. */
   @Test
-  void getBookById_shouldReturnBookIfExists() {
+  void getBookById_whenBookExists_shouldReturnBook() {
 
     String bookId = "12345-67890";
     BookStock book = new BookStock(bookId, "Some Book", 10);
@@ -54,7 +52,7 @@ class BookStockServiceTest {
    * book does not exist.
    */
   @Test
-  void getBookById_shouldThrowExceptionIfBookDoesNotExist() {
+  void getBookById_whenBookDoesNotExist_shouldThrowException() {
 
     String bookId = "12345-67890";
     when(bookStockRepository.findById(bookId)).thenReturn(Optional.empty());
@@ -69,7 +67,7 @@ class BookStockServiceTest {
    * correctly.
    */
   @Test
-  void updateBookStock_shouldUpdateStockCorrectly() {
+  void updateBookStock_whenBookExists_shouldUpdateStockCorrectly() {
 
     String bookId = "12345-67890";
     BookStock book = new BookStock(bookId, "Some Book", 10);
@@ -91,7 +89,22 @@ class BookStockServiceTest {
    * exception if the book does not exist.
    */
   @Test
-  void updateBookStock_shouldThrowExceptionIfQuantityIsNegative() {
+  void updateBookStock_whenBookDoesNotExist_shouldThrowException() {
+
+    String bookId = "12345-67890";
+    BookStock book = new BookStock(bookId, "Some Book", 10);
+
+    assertThatThrownBy(() -> bookStockService.updateBookStock(bookId, 5))
+        .isInstanceOf(NonExistentBookException.class)
+        .hasMessage(String.format("Book with id \"%s\" does not exist", bookId));
+  }
+
+  /**
+   * Tests that the {@link BookStockService#updateBookStock(String, Integer)} method throws an
+   * exception if the book does not exist.
+   */
+  @Test
+  void updateBookStock_whenQuantityIsNegative_shouldThrowException() {
 
     String bookId = "12345-67890";
     BookStock book = new BookStock(bookId, "Some Book", 10);

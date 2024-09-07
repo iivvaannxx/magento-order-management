@@ -1,0 +1,2 @@
+-- We add this file to replace the default import.sql file (which gets also executed during tests).
+-- This is done to ensure that the database is always in a known state.
