@@ -6,7 +6,6 @@ import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderResource {
 
   /** The logger instance for this class. */
-  private static final Logger logger = LoggerFactory.getLogger(OrderResource.class);
+  private final Logger logger;
 
   /** The singleton instance of {@link OrderService}. */
   private final OrderService orderService;
@@ -35,11 +34,13 @@ public class OrderResource {
    *
    * @param orderService An instance of {@link OrderService}.
    * @param orderMapper An instance of {@link OrderMapper}.
+   * @param logger An instance of {@link Logger}.
    */
   @Autowired
-  public OrderResource(OrderService orderService, OrderMapper orderMapper) {
+  public OrderResource(OrderService orderService, OrderMapper orderMapper, Logger logger) {
     this.orderService = orderService;
     this.orderMapper = orderMapper;
+    this.logger = logger;
   }
 
   /** Returns a list of {@link ResponseOrderDTO} for all the {@link Order} in the repository. */

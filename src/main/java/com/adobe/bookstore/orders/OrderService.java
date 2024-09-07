@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class OrderService {
 
   /** The logger instance for this class. */
-  private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+  private final Logger logger;
 
   /** The singleton instance of {@link OrderRepository}. */
   private final OrderRepository orderRepository;
@@ -34,11 +33,14 @@ public class OrderService {
    *
    * @param orderRepository An instance of {@link OrderRepository}.
    * @param bookStockService An instance of {@link BookStockService}.
+   * @param logger An instance of {@link Logger}.
    */
   @Autowired
-  public OrderService(OrderRepository orderRepository, BookStockService bookStockService) {
+  public OrderService(
+      OrderRepository orderRepository, BookStockService bookStockService, Logger logger) {
     this.orderRepository = orderRepository;
     this.bookStockService = bookStockService;
+    this.logger = logger;
   }
 
   /** Returns all the {@link Order} in the repository. */

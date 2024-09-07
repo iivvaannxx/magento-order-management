@@ -3,7 +3,7 @@ package com.adobe.bookstore.bookstock;
 import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
 import java.util.Map;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,7 +14,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class BookStockExceptionHandler {
 
   /** The logger instance for this class. */
-  private static final Logger logger = LoggerFactory.getLogger(BookStockExceptionHandler.class);
+  private final Logger logger;
+
+  /**
+   * Creates a new instance of the {@link BookStockExceptionHandler} class.
+   *
+   * @param logger An instance of {@link Logger}.
+   */
+  @Autowired
+  public BookStockExceptionHandler(Logger logger) {
+    this.logger = logger;
+  }
 
   /**
    * Handles the {@link NonExistentBookException} and returns a 404 Not Found response.
