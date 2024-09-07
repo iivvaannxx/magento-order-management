@@ -24,11 +24,7 @@ public class BookOrderMapperTest {
   @Test
   public void toBookOrderDto_shouldMapCorrectly() {
 
-    BookStock book = new BookStock();
-    book.setId("12345-67890");
-    book.setName("some book");
-    book.setQuantity(10);
-
+    BookStock book = new BookStock("12345-67890", "Some Book", 10);
     BookOrder bookOrder = new BookOrder();
     bookOrder.setBook(book);
     bookOrder.setQuantity(5);

@@ -32,6 +32,21 @@ public class BookStock {
   @OneToMany(mappedBy = "book")
   private Set<BookOrder> bookOrders;
 
+  /**
+   * Creates a new instance of the {@link BookStock} class.
+   *
+   * @param id The unique identifier of the book.
+   * @param name The name of the book.
+   * @param quantity The current stock of the book.
+   */
+  public BookStock(String id, String name, Integer quantity) {
+    this.id = id;
+    this.name = name;
+    this.quantity = quantity;
+  }
+
+  public BookStock() {}
+
   /** Returns the unique identifier of the book. */
   public String getId() {
     return id;
