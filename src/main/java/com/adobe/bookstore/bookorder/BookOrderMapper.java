@@ -11,7 +11,7 @@ public class BookOrderMapper {
      * Maps a {@link BookOrder} object to a {@link BookOrderDTO} object.
      * @param bookOrder The {@link BookOrder} object to transform.
      */
-    public BookOrderDTO toDto(BookOrder bookOrder) {
+    public BookOrderDTO toBookOrderDto(BookOrder bookOrder) {
         return new BookOrderDTO(
             bookOrder.getBook().getId(),
             bookOrder.getQuantity()

@@ -30,7 +30,7 @@ public class OrderMapper {
         return new ResponseOrderDTO(
             order.getId(),
             order.getBooks().stream()
-                .map(bookOrderMapper::toDto)
+                .map(bookOrderMapper::toBookOrderDto)
                 .collect(Collectors.toList())
         );
     }

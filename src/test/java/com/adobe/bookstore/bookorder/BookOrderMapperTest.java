@@ -20,9 +20,9 @@ public class BookOrderMapperTest {
         bookOrderMapper = new BookOrderMapper();
     }
     
-    /** Tests that the {@link BookOrderMapper#toDto(BookOrder)} method works correctly. */
+    /** Tests that the {@link BookOrderMapper#toBookOrderDto(BookOrder)} method works correctly. */
     @Test
-    public void toResponseOrderDto_shouldMapCorrectly() {
+    public void toBookOrderDto_shouldMapCorrectly() {
         
         BookStock book = new BookStock();
         book.setId("12345-67890");
@@ -33,7 +33,7 @@ public class BookOrderMapperTest {
         bookOrder.setBook(book);
         bookOrder.setQuantity(5);
         
-        BookOrderDTO result = bookOrderMapper.toDto(bookOrder);
+        BookOrderDTO result = bookOrderMapper.toBookOrderDto(bookOrder);
         
         assertThat(result).isNotNull();
         assertThat(result.bookId()).isEqualTo("12345-67890");
