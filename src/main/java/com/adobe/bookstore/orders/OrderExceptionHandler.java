@@ -2,6 +2,7 @@ package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
+import com.adobe.bookstore.orders.exceptions.OrderAlreadyContainsBook;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,16 @@ public class OrderExceptionHandler {
         "bookId", ex.getBookId(),
         "requestedQuantity", ex.getRequestedQuantity(),
         "availableQuantity", ex.getAvailableQuantity());
+  }
+
+  /** Handles the {@link OrderAlreadyContainsBook} and returns a 400 Bad Request response. */
+  @ExceptionHandler(OrderAlreadyContainsBook.class)
+  @ResponseStatus(
+      // We return a 400 Bad Request to inform that the request is invalid.
+      HttpStatus.BAD_REQUEST)
+  public Map<String, Object> handleOrderAlreadyContainsBookException(OrderAlreadyContainsBook ex) {
+    logger.error(ex.getMessage());
+    return Map.of("error", "Order already contains book", "bookId", ex.getBookId());
   }
 
   /**

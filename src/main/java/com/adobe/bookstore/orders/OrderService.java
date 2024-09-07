@@ -7,11 +7,12 @@ import com.adobe.bookstore.bookstock.BookStockService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
+import com.adobe.bookstore.orders.exceptions.OrderAlreadyContainsBook;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
@@ -73,6 +74,7 @@ public class OrderService {
 
     Order order = new Order();
     Map<String, Integer> newBookStocks = new HashMap<>();
+    Set<String> bookIds = new HashSet<>();
 
     // Check if there are enough stocks to fulfill the order.
     for (BookOrderDTO bookOrderDto : orderDto.books()) {
@@ -80,6 +82,10 @@ public class OrderService {
       BookStock book = bookStockService.getBookById(bookOrderDto.bookId());
       Integer stock = book.getQuantity();
       Integer orderQuantity = bookOrderDto.quantity();
+
+      if (!(bookIds.add(book.getId()))) {
+        throw new OrderAlreadyContainsBook(book.getId());
+      }
 
       // We can't fulfill the order if there are not enough stocks.
       if (stock < orderQuantity) {
@@ -111,14 +117,7 @@ public class OrderService {
 
     // Check if the book is already in the order.
     Set<BookOrder> books = order.getBooks();
-    Optional<BookOrder> existingBook =
-        books.stream().filter(b -> b.getBook().equals(bookStock)).findFirst();
-
-    // If the book is already in the order, update the quantity.
-    // Otherwise, add the book to the order.
-    existingBook.ifPresentOrElse(
-        bookOrder -> bookOrder.setQuantity(bookOrder.getQuantity() + quantity),
-        () -> books.add(new BookOrder(order, bookStock, quantity)));
+    books.add(new BookOrder(order, bookStock, quantity));
 
     return bookStock.getQuantity() - quantity;
   }
