@@ -12,6 +12,11 @@ public class BookOrderMapper {
      * @param bookOrder The {@link BookOrder} object to transform.
      */
     public BookOrderDTO toBookOrderDto(BookOrder bookOrder) {
+        
+        if (bookOrder == null) {
+            throw new IllegalArgumentException("Book order cannot be null.");
+        }
+        
         return new BookOrderDTO(
             bookOrder.getBook().getId(),
             bookOrder.getQuantity()

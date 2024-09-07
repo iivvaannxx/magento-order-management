@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** Unit tests for the {@link BookOrderMapper} class. */
 public class BookOrderMapperTest {
@@ -38,5 +39,14 @@ public class BookOrderMapperTest {
         assertThat(result).isNotNull();
         assertThat(result.bookId()).isEqualTo("12345-67890");
         assertThat(result.quantity()).isEqualTo(5);
+    }
+    
+    /** Tests that the {@link BookOrderMapper#toBookOrderDto(BookOrder)} method throws an exception when the book order is null. */
+    @Test
+    public void toBookOrderDto_shouldThrowExceptionWhenBookOrderIsNull() {
+        
+        assertThatThrownBy(() -> bookOrderMapper.toBookOrderDto(null))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Book order cannot be null.");
     }
 }
