@@ -30,6 +30,17 @@ public class Order {
   /** Creates an empty instance of the {@link Order} class. */
   public Order() {}
 
+  /**
+   * Creates a new instance of the {@link Order} class.
+   *
+   * @param id The unique identifier of the order.
+   * @param books The set of {@link BookOrder} that are part of this order.
+   */
+  public Order(String id, Set<BookOrder> books) {
+    this.id = id;
+    this.books = books;
+  }
+
   /** Returns the unique identifier of the order. */
   public String getId() {
     return id;
