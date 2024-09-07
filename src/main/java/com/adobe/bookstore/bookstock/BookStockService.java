@@ -46,15 +46,11 @@ public class BookStockService {
   public void updateBookStock(String bookId, Integer quantity)
       throws NonExistentBookException, IllegalArgumentException {
 
-    BookStock bookStock =
-        bookStockRepository
-            .findById(bookId)
-            .orElseThrow(() -> new NonExistentBookException(bookId));
-
     if (quantity < 0) {
       throw new IllegalArgumentException("Quantity cannot be negative.");
     }
 
+    BookStock bookStock = this.getBookById(bookId);
     bookStock.setQuantity(quantity);
     bookStockRepository.save(bookStock);
   }
