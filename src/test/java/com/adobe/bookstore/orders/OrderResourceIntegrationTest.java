@@ -101,6 +101,27 @@ public class OrderResourceIntegrationTest {
   }
 
   /**
+   * Tests that the {@link OrderResource#newOrder(NewOrderDTO)} method returns a 400 Bad Request if
+   * the order already contains a previously processed book.
+   */
+  @Test
+  void newOrder_whenBookAlreadyInOrder_shouldReturnBadRequest() {
+    String bookId = "12345-67890";
+    int orderedQuantity = 2;
+
+    BookOrderDTO bookOrderDTO = new BookOrderDTO(bookId, orderedQuantity);
+    NewOrderDTO newOrderDTO = new NewOrderDTO(List.of(bookOrderDTO, bookOrderDTO));
+
+    ResponseEntity<Map<String, Object>> response =
+        sendPostRequestWhichReturnsGenericMap(newOrderDTO);
+
+    Map<String, Object> errorMap = response.getBody();
+    assertThat(errorMap).isNotNull();
+    assertThat(errorMap).containsEntry("error", "Order already contains book");
+    assertThat(errorMap).containsEntry("bookId", bookId);
+  }
+
+  /**
    * Tests that the {@link OrderResource#newOrder(NewOrderDTO)} method returns a 409 Conflict if the
    * order is invalid because there are not enough stocks to fulfill the order.
    */

@@ -9,6 +9,8 @@ import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import com.adobe.bookstore.orders.exceptions.OrderAlreadyContainsBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -74,6 +76,53 @@ class OrderExceptionHandlerTest {
   void handleNonExistentBookException_shouldLogErrorMessage() {
     NonExistentOrderException ex = new NonExistentOrderException("11111-22222");
     orderExceptionHandler.handleNonExistentOrderException(ex);
+
+    verify(logger).error(ex.getMessage());
+  }
+
+  /**
+   * Tests that the {@link
+   * OrderExceptionHandler#handleOrderAlreadyContainsBookException(OrderAlreadyContainsBook)} method
+   * is annotated with the correct {@link ResponseStatus}.
+   */
+  @Test
+  void handlerOrderAlreadyContainsBook_shouldHaveCorrectResponseStatus() {
+    assertDoesNotThrow(
+        () -> {
+          Method method =
+              OrderExceptionHandler.class.getMethod(
+                  "handleOrderAlreadyContainsBookException", OrderAlreadyContainsBook.class);
+
+          ResponseStatus annotation = method.getAnnotation(ResponseStatus.class);
+          assertThat(annotation.value()).isEqualTo(HttpStatus.BAD_REQUEST);
+        });
+  }
+
+  /**
+   * Tests that the {@link
+   * OrderExceptionHandler#handleOrderAlreadyContainsBookException(OrderAlreadyContainsBook)} method
+   * returns a map with the correct error information.
+   */
+  @Test
+  void handleOrderAlreadyContainsBook_shouldReturnCorrectErrorMap() {
+    OrderAlreadyContainsBook ex = new OrderAlreadyContainsBook("12345-67890");
+    Map<String, Object> result = orderExceptionHandler.handleOrderAlreadyContainsBookException(ex);
+
+    assertThat(result)
+        .isNotNull()
+        .containsEntry("error", "Order already contains book")
+        .containsEntry("bookId", "12345-67890");
+  }
+
+  /**
+   * Tests that the {@link
+   * OrderExceptionHandler#handleOrderAlreadyContainsBookException(OrderAlreadyContainsBook)} method
+   * logs the error message correctly.
+   */
+  @Test
+  void handleOrderAlreadyContainsBook_shouldLogErrorMessage() {
+    OrderAlreadyContainsBook ex = new OrderAlreadyContainsBook("12345-67890");
+    orderExceptionHandler.handleOrderAlreadyContainsBookException(ex);
 
     verify(logger).error(ex.getMessage());
   }

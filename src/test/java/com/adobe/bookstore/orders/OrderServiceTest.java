@@ -17,6 +17,7 @@ import com.adobe.bookstore.bookstock.BookStockService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
+import com.adobe.bookstore.orders.exceptions.OrderAlreadyContainsBook;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -169,6 +170,30 @@ public class OrderServiceTest {
             String.format(
                 "Not enough stock for book \"%s\". Requested: %d, Available: %d",
                 bookId, requestedQuantity, availableStock));
+
+    verify(orderRepository, times(0)).save(any());
+    verify(bookStockService, times(0)).updateBookStock(anyString(), anyInt());
+  }
+
+  /**
+   * Tests that the {@link OrderService#createOrder(NewOrderDTO)} method throws an exception if the
+   * order already contains a previously processed book.
+   */
+  @Test
+  void createOrder_withBookAlreadyInOrder_shouldThrowException() {
+
+    String bookId = "12345-67890";
+    int availableStock = 5;
+    int requestedQuantity = 2;
+
+    BookStock book = new BookStock(bookId, "Some Book", availableStock);
+    BookOrderDTO bookOrderDto = new BookOrderDTO(bookId, requestedQuantity);
+    NewOrderDTO newOrderDto = new NewOrderDTO(List.of(bookOrderDto, bookOrderDto));
+    when(bookStockService.getBookById(bookId)).thenReturn(book);
+
+    assertThatThrownBy(() -> orderService.createOrder(newOrderDto))
+        .isInstanceOf(OrderAlreadyContainsBook.class)
+        .hasMessage(String.format("Order already contains book with id \"%s\"", bookId));
 
     verify(orderRepository, times(0)).save(any());
     verify(bookStockService, times(0)).updateBookStock(anyString(), anyInt());
