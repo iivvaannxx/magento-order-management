@@ -2,8 +2,6 @@ package com.adobe.bookstore;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.adobe.bookstore.orders.OrderExceptionHandler;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +35,8 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(
-      HttpStatus.BAD_REQUEST) // We return a 400 Bad Request to inform that the request is invalid.
+      // We return a 400 Bad Request to inform that the request is invalid.
+      HttpStatus.BAD_REQUEST)
   public Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
     // Collect all the errors in a map of field names and error messages.
