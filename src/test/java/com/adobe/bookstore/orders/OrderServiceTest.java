@@ -167,7 +167,7 @@ public class OrderServiceTest {
         .isInstanceOf(InsufficientStockException.class)
         .hasMessage(
             String.format(
-                "Not enough stock for book %s. Requested: %d, Available: %d",
+                "Not enough stock for book \"%s\". Requested: %d, Available: %d",
                 bookId, requestedQuantity, availableStock));
 
     verify(orderRepository, times(0)).save(any());

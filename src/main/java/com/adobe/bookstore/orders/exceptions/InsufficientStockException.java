@@ -25,7 +25,7 @@ public class InsufficientStockException extends RuntimeException {
   public InsufficientStockException(String bookId, int requestedQuantity, int availableQuantity) {
     super(
         String.format(
-            "Not enough stock for book %s. Requested: %d, Available: %d",
+            "Not enough stock for book \"%s\". Requested: %d, Available: %d",
             bookId, requestedQuantity, availableQuantity));
 
     this.bookId = bookId;
