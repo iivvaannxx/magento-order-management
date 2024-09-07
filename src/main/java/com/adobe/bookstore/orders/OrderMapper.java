@@ -3,6 +3,8 @@ package com.adobe.bookstore.orders;
 import com.adobe.bookstore.bookorder.BookOrderMapper;
 import com.adobe.bookstore.orders.dto.ResponseOrderDTO;
 import java.util.stream.Collectors;
+
+import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +33,14 @@ public class OrderMapper {
         order.getBooks().stream()
             .map(bookOrderMapper::toBookOrderDto)
             .collect(Collectors.toList()));
+  }
+
+  /**
+   * Maps an {@link Order} object to an {@link SuccessfulOrderDTO} object.
+   *
+   * @param order The {@link Order} object to transform.
+   */
+  public SuccessfulOrderDTO toSuccessfulOrderDto(Order order) {
+    return new SuccessfulOrderDTO(order.getId());
   }
 }

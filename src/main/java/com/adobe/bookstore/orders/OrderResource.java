@@ -75,6 +75,6 @@ public class OrderResource {
     Order newOrder = orderService.createOrder(order);
     logger.info("Created new order: {}", newOrder.getId());
 
-    return ResponseEntity.ok(new SuccessfulOrderDTO(newOrder.getId()));
+    return ResponseEntity.ok(orderMapper.toSuccessfulOrderDto(newOrder));
   }
 }
