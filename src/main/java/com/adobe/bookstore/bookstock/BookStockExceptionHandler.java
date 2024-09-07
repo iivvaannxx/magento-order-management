@@ -35,7 +35,7 @@ public class BookStockExceptionHandler {
   @ResponseStatus(
       // We return a 404 Not Found to inform that the resource does not exist.
       HttpStatus.NOT_FOUND)
-  public Map<String, Object> handleNonExistantBookException(NonExistentBookException ex) {
+  public Map<String, Object> handleNonExistentBookException(NonExistentBookException ex) {
 
     logger.error(ex.getMessage());
     return Map.of("error", "Book does not exist", "bookId", ex.getBookId());

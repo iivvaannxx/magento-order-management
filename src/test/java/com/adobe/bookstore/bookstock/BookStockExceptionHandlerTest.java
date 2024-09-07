@@ -32,16 +32,16 @@ class BookStockExceptionHandlerTest {
 
   /**
    * Tests that the {@link
-   * BookStockExceptionHandler#handleNonExistantBookException(NonExistentBookException)} method is
+   * BookStockExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method is
    * annotated with the correct {@link ResponseStatus}.
    */
   @Test
-  void handleNonExistantBookException_shouldHaveCorrectResponseStatus() {
+  void handleNonExistentBookException_shouldHaveCorrectResponseStatus() {
     assertDoesNotThrow(
         () -> {
           Method method =
               BookStockExceptionHandler.class.getMethod(
-                  "handleNonExistantBookException", NonExistentBookException.class);
+                  "handleNonExistentBookException", NonExistentBookException.class);
           ResponseStatus annotation = method.getAnnotation(ResponseStatus.class);
           assertThat(annotation.value()).isEqualTo(HttpStatus.NOT_FOUND);
         });
@@ -49,13 +49,13 @@ class BookStockExceptionHandlerTest {
 
   /**
    * Tests that the {@link
-   * BookStockExceptionHandler#handleNonExistantBookException(NonExistentBookException)} method
+   * BookStockExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method
    * returns a map with the correct error information.
    */
   @Test
-  void handleNonExistantBookException_shouldReturnCorrectErrorMap() {
+  void handleNonExistentBookException_shouldReturnCorrectErrorMap() {
     NonExistentBookException ex = new NonExistentBookException("12345-67890");
-    Map<String, Object> result = bookStockExceptionHandler.handleNonExistantBookException(ex);
+    Map<String, Object> result = bookStockExceptionHandler.handleNonExistentBookException(ex);
 
     assertThat(result)
         .isNotNull()
@@ -65,13 +65,13 @@ class BookStockExceptionHandlerTest {
 
   /**
    * Tests that the {@link
-   * BookStockExceptionHandler#handleNonExistantBookException(NonExistentBookException)} method logs
+   * BookStockExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method logs
    * the error message correctly.
    */
   @Test
   void handleNonExistantBookException_shouldLogErrorMessage() {
     NonExistentBookException ex = new NonExistentBookException("12345-67890");
-    bookStockExceptionHandler.handleNonExistantBookException(ex);
+    bookStockExceptionHandler.handleNonExistentBookException(ex);
 
     verify(logger).error(ex.getMessage());
   }

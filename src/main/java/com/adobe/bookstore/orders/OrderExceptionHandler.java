@@ -55,7 +55,7 @@ public class OrderExceptionHandler {
   @ResponseStatus(
       // We return a 404 Not Found to inform that the resource does not exist.
       HttpStatus.NOT_FOUND)
-  public Map<String, Object> handleNonExistantOrderException(NonExistentOrderException ex) {
+  public Map<String, Object> handleNonExistentOrderException(NonExistentOrderException ex) {
 
     logger.error(ex.getMessage());
     return Map.of("error", "Order does not exist", "orderId", ex.getOrderId());
