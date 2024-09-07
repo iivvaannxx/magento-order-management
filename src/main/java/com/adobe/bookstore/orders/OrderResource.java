@@ -1,7 +1,7 @@
 package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
-import com.adobe.bookstore.orders.dto.OrderDTO;
+import com.adobe.bookstore.orders.dto.ResponseOrderDTO;
 import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
 
 import jakarta.validation.Valid;
@@ -44,26 +44,26 @@ public class OrderResource {
         this.orderMapper = orderMapper;
     }
     
-    /** Returns a list of {@link OrderDTO} for all the {@link Order} in the repository. */
+    /** Returns a list of {@link ResponseOrderDTO} for all the {@link Order} in the repository. */
     @GetMapping(path = {"", "/"})
-    public ResponseEntity<List<OrderDTO>> allOrders() {
+    public ResponseEntity<List<ResponseOrderDTO>> allOrders() {
         // Even if there are no orders, we return a 200 OK with an empty list (valid JSON).
         // Another option would be to return a 204 No Content (in case there are no orders).
-        List<OrderDTO> orders = orderService.getAllOrders().stream()
-            .map(orderMapper::toDto)
+        List<ResponseOrderDTO> orders = orderService.getAllOrders().stream()
+            .map(orderMapper::toResponseOrderDto)
             .toList();
         
         return ResponseEntity.ok(orders);
     }
     
     /**
-     * Returns the {@link OrderDTO} for the {@link Order} with the given identifier.
+     * Returns the {@link ResponseOrderDTO} for the {@link Order} with the given identifier.
      * @param orderId The identifier of the order to retrieve.
      */
     @GetMapping("{orderId}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable String orderId) {
+    public ResponseEntity<ResponseOrderDTO> getOrderById(@PathVariable String orderId) {
         Order order = orderService.getOrderById(orderId);
-        return ResponseEntity.ok(orderMapper.toDto(order));
+        return ResponseEntity.ok(orderMapper.toResponseOrderDto(order));
     }
     
     /**

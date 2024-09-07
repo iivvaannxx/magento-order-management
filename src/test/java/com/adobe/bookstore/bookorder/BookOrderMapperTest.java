@@ -22,7 +22,7 @@ public class BookOrderMapperTest {
     
     /** Tests that the {@link BookOrderMapper#toDto(BookOrder)} method works correctly. */
     @Test
-    public void toDto_shouldMapCorrectly() {
+    public void toResponseOrderDto_shouldMapCorrectly() {
         
         BookStock book = new BookStock();
         book.setId("12345-67890");

@@ -1,7 +1,7 @@
 package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.bookorder.BookOrderMapper;
-import com.adobe.bookstore.orders.dto.OrderDTO;
+import com.adobe.bookstore.orders.dto.ResponseOrderDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,12 @@ public class OrderMapper {
     }
     
     /**
-     * Maps an {@link Order} object to an {@link OrderDTO} object.
+     * Maps an {@link Order} object to an {@link ResponseOrderDTO} object.
      * @param order The {@link Order} object to transform.
      */
-    public OrderDTO toDto(Order order) {
+    public ResponseOrderDTO toResponseOrderDto(Order order) {
 
-        return new OrderDTO(
+        return new ResponseOrderDTO(
             order.getId(),
             order.getBooks().stream()
                 .map(bookOrderMapper::toDto)
