@@ -20,6 +20,13 @@
       jdk.package = pkgs.jdk17;
     };
 
+    # Node.js with TypeScript for the frontend.
+    languages.typescript.enable = true;
+    languages.javascript = {
+      enable = true;
+      pnpm.enable = true;
+    };
+
     devenv.root = let
       devenvRootFileContent = builtins.readFile devenv-root.outPath;
     in
