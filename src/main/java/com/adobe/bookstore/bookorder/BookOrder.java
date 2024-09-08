@@ -1,6 +1,6 @@
 package com.adobe.bookstore.bookorder;
 
-import com.adobe.bookstore.bookstock.BookStock;
+import com.adobe.bookstore.books.Book;
 import com.adobe.bookstore.orders.Order;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 
-/** Defines the join table entity between {@link Order} and {@link BookStock}. */
+/** Defines the join table entity between {@link Order} and {@link Book}. */
 @Entity
 @Table(
     name = "book_orders",
@@ -29,10 +29,10 @@ public class BookOrder {
   @JoinColumn(name = "order_id")
   private Order order;
 
-  /** The {@link BookStock} that was ordered. */
+  /** The {@link Book} that was ordered. */
   @ManyToOne
   @JoinColumn(name = "book_id")
-  private BookStock book;
+  private Book book;
 
   /** How many books (with a given identifier) were ordered. */
   private Integer quantity;
@@ -47,7 +47,7 @@ public class BookOrder {
    * @param book The book that was ordered.
    * @param quantity The quantity of books that were ordered.
    */
-  public BookOrder(Order order, BookStock book, Integer quantity) {
+  public BookOrder(Order order, Book book, Integer quantity) {
     this.order = order;
     this.book = book;
     this.quantity = quantity;
@@ -67,17 +67,17 @@ public class BookOrder {
     this.order = order;
   }
 
-  /** Returns the {@link BookStock} that was ordered. */
-  public BookStock getBook() {
+  /** Returns the {@link Book} that was ordered. */
+  public Book getBook() {
     return book;
   }
 
   /**
-   * Sets the {@link BookStock} that was ordered.
+   * Sets the {@link Book} that was ordered.
    *
-   * @param book The new {@link BookStock} to be associated with this book order.
+   * @param book The new {@link Book} to be associated with this book order.
    */
-  public void setBook(BookStock book) {
+  public void setBook(Book book) {
     this.book = book;
   }
 

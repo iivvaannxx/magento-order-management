@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
-import com.adobe.bookstore.bookstock.BookStock;
+import com.adobe.bookstore.books.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class BookOrderMapperTest {
   @Test
   public void toBookOrderDto_shouldMapCorrectly() {
 
-    BookStock book = new BookStock("12345-67890", "Some Book", 10);
+    Book book = new Book("12345-67890", "Some Book", 10);
     BookOrder bookOrder = new BookOrder();
     bookOrder.setBook(book);
     bookOrder.setQuantity(5);

@@ -1,4 +1,4 @@
-package com.adobe.bookstore.bookstock;
+package com.adobe.bookstore.books;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/** Integration tests for the {@link BookStockResource} class. */
+/** Integration tests for the {@link BookResource} class. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BookStockResourceIntegrationTest {
+class BookResourceIntegrationTest {
 
   /** The port where the application is running. */
   @LocalServerPort private int port;
@@ -29,44 +29,44 @@ class BookStockResourceIntegrationTest {
   /** Runs before each test. */
   @BeforeEach
   public void setUp() {
-    insertBookStock("12345-67890", "Some Book", 7);
+    insertBook("12345-67890", "Some Book", 7);
   }
 
   /** Runs after each test. */
   @AfterEach
   public void tearDown() {
-    jdbcTemplate.update("DELETE FROM book_stock");
+    jdbcTemplate.update("DELETE FROM books");
   }
 
   /**
-   * Tests that the {@link BookStockResource#getStockById(String)} method works correctly if the
-   * book exists.
+   * Tests that the {@link BookResource#getBookById(String)} method works correctly if the book
+   * exists.
    */
   @Test
-  public void getBookStock_whenBookExists_shouldReturnBookStock() {
+  public void getBookById_whenBookExists_shouldReturnBook() {
 
-    String url = getBookStockUrl("12345-67890");
-    BookStock expectedBookStock = new BookStock("12345-67890", "Some Book", 7);
+    String url = getBookUrl("12345-67890");
+    Book expectedBook = new Book("12345-67890", "Some Book", 7);
 
-    ResponseEntity<BookStock> response = restTemplate.getForEntity(url, BookStock.class);
-    BookStock result = response.getBody();
+    ResponseEntity<Book> response = restTemplate.getForEntity(url, Book.class);
+    Book result = response.getBody();
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(result).isNotNull();
-    assertThat(result.getIsbn()).isEqualTo(expectedBookStock.getIsbn());
-    assertThat(result.getTitle()).isEqualTo(expectedBookStock.getTitle());
-    assertThat(result.getStock()).isEqualTo(expectedBookStock.getStock());
+    assertThat(result.getIsbn()).isEqualTo(expectedBook.getIsbn());
+    assertThat(result.getTitle()).isEqualTo(expectedBook.getTitle());
+    assertThat(result.getStock()).isEqualTo(expectedBook.getStock());
   }
 
   /**
-   * Tests that the {@link BookStockResource#getStockById(String)} method returns a 404 Not Found if
-   * the book does not exist.
+   * Tests that the {@link BookResource#getBookById(String)} method returns a 404 Not Found if the
+   * book does not exist.
    */
   @Test
-  public void getBookStock_whenDoesNotExist_shouldReturnNotFound() {
+  public void getBookById_whenDoesNotExist_shouldReturnNotFound() {
 
-    String url = getBookStockUrl("22222-22222");
-    ResponseEntity<BookStock> response = restTemplate.getForEntity(url, BookStock.class);
+    String url = getBookUrl("22222-22222");
+    ResponseEntity<Book> response = restTemplate.getForEntity(url, Book.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -76,8 +76,8 @@ class BookStockResourceIntegrationTest {
    *
    * @param bookId The identifier of the book.
    */
-  private String getBookStockUrl(String bookId) {
-    return String.format("http://localhost:%d/api/books_stock/%s", port, bookId);
+  private String getBookUrl(String bookId) {
+    return String.format("http://localhost:%d/api/books/%s", port, bookId);
   }
 
   /**
@@ -87,8 +87,11 @@ class BookStockResourceIntegrationTest {
    * @param title The name of the book.
    * @param stock The quantity of the book.
    */
-  private void insertBookStock(String isbn, String title, int stock) {
+  private void insertBook(String isbn, String title, int stock) {
     jdbcTemplate.update(
-        "INSERT INTO book_stock (isbn, title, stock) VALUES (?, ?, ?)", isbn, title, stock);
+        "INSERT INTO books (isbn, title, publish_year, author, stock, price, cover_url) VALUES (?, ?, 2000, 'The Author', ?, 29.99, 'cover')",
+        isbn,
+        title,
+        stock);
   }
 }

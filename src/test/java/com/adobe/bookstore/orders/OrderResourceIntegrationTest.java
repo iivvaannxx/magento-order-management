@@ -38,7 +38,7 @@ public class OrderResourceIntegrationTest {
   /** Runs before each test. */
   @BeforeEach
   void setUp() {
-    insertBookStock("12345-67890", "Some Book", 7);
+    insertBook("12345-67890", "Some Book", 7);
   }
 
   /** Runs after each test. */
@@ -46,7 +46,7 @@ public class OrderResourceIntegrationTest {
   void tearDown() {
     jdbcTemplate.update("DELETE FROM book_orders");
     jdbcTemplate.update("DELETE FROM orders");
-    jdbcTemplate.update("DELETE FROM book_stock");
+    jdbcTemplate.update("DELETE FROM books");
   }
 
   /**
@@ -78,7 +78,7 @@ public class OrderResourceIntegrationTest {
     // The order was successfully created.
     assertThat(count).isEqualTo(1);
 
-    query = String.format("SELECT stock FROM book_stock WHERE isbn = '%s'", bookId);
+    query = String.format("SELECT stock FROM books WHERE isbn = '%s'", bookId);
     Integer remainingStock = jdbcTemplate.queryForObject(query, Integer.class);
 
     // Initial stock is 7 and we ordered 2 books.
@@ -175,7 +175,7 @@ public class OrderResourceIntegrationTest {
   @Test
   @Sql(
       statements = {
-        "INSERT INTO book_stock (isbn, title, stock) VALUES ('98765-43210', 'Another Book', 10)",
+        "INSERT INTO books (isbn, title, publish_year, author, stock, price, cover_url) VALUES ('98765-43210', 'Another Book', 2000, 'The Author', 10, 29.99, 'cover')",
         "INSERT INTO orders (id) VALUES ('11111-22222')",
         "INSERT INTO orders (id) VALUES ('33333-44444')",
         "INSERT INTO orders (id) VALUES ('55555-66666')",
@@ -206,7 +206,7 @@ public class OrderResourceIntegrationTest {
   @Test
   @Sql(
       statements = {
-        "INSERT INTO book_stock (isbn, title, stock) VALUES ('98765-43210', 'Another Book', 10)",
+        "INSERT INTO books (isbn, title, publish_year, author, stock, price, cover_url) VALUES ('98765-43210', 'Another Book', 2000, 'The Author', 10, 29.99, 'cover')",
         "INSERT INTO orders (id) VALUES ('11111-22222')",
         "INSERT INTO book_orders (id, book_id, order_id, quantity) VALUES (default, '98765-43210', '11111-22222', 2)"
       },
@@ -287,8 +287,11 @@ public class OrderResourceIntegrationTest {
    * @param title The name of the book.
    * @param stock The quantity of the book.
    */
-  private void insertBookStock(String isbn, String title, int stock) {
+  private void insertBook(String isbn, String title, int stock) {
     jdbcTemplate.update(
-        "INSERT INTO book_stock (isbn, title, stock) VALUES (?, ?, ?)", isbn, title, stock);
+        "INSERT INTO books (isbn, title, publish_year, author, stock, price, cover_url) VALUES (?, ?, 2000, 'The Author', ?, 29.99, 'cover')",
+        isbn,
+        title,
+        stock);
   }
 }

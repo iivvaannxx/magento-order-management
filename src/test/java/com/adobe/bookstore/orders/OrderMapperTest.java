@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import com.adobe.bookstore.bookorder.BookOrder;
 import com.adobe.bookstore.bookorder.BookOrderMapper;
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
-import com.adobe.bookstore.bookstock.BookStock;
+import com.adobe.bookstore.books.Book;
 import com.adobe.bookstore.orders.dto.ResponseOrderDTO;
 import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
 import java.util.Set;
@@ -40,7 +40,7 @@ public class OrderMapperTest {
     order.setId("111111-22222");
 
     // Create a book order with a quantity of 5.
-    BookStock book = new BookStock("12345-67890", "Some Book", 10);
+    Book book = new Book("12345-67890", "Some Book", 10);
     BookOrder bookOrder = new BookOrder(order, book, 5);
     order.setBooks(Set.of(bookOrder));
 

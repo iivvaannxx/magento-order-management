@@ -44,7 +44,7 @@ public class OrderResource {
   }
 
   /** Returns a list of {@link ResponseOrderDTO} for all the {@link Order} in the repository. */
-  @GetMapping(path = {"", "/"})
+  @GetMapping
   public ResponseEntity<List<ResponseOrderDTO>> allOrders() {
     // Even if there are no orders, we return a 200 OK with an empty list (valid JSON).
     // Another option would be to return a 204 No Content (in case there are no orders).

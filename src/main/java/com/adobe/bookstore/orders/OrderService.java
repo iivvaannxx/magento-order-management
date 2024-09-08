@@ -2,8 +2,8 @@ package com.adobe.bookstore.orders;
 
 import com.adobe.bookstore.bookorder.BookOrder;
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
-import com.adobe.bookstore.bookstock.BookStock;
-import com.adobe.bookstore.bookstock.BookStockService;
+import com.adobe.bookstore.books.Book;
+import com.adobe.bookstore.books.BookService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
@@ -29,21 +29,20 @@ public class OrderService {
   /** The singleton instance of {@link OrderRepository}. */
   private final OrderRepository orderRepository;
 
-  /** The singleton instance of {@link BookStockService}. */
-  private final BookStockService bookStockService;
+  /** The singleton instance of {@link BookService}. */
+  private final BookService bookService;
 
   /**
    * Creates a new instance of the {@link OrderService} class.
    *
    * @param orderRepository An instance of {@link OrderRepository}.
-   * @param bookStockService An instance of {@link BookStockService}.
+   * @param bookService An instance of {@link BookService}.
    * @param logger An instance of {@link Logger}.
    */
   @Autowired
-  public OrderService(
-      OrderRepository orderRepository, BookStockService bookStockService, Logger logger) {
+  public OrderService(OrderRepository orderRepository, BookService bookService, Logger logger) {
     this.orderRepository = orderRepository;
-    this.bookStockService = bookStockService;
+    this.bookService = bookService;
     this.logger = logger;
   }
 
@@ -79,7 +78,7 @@ public class OrderService {
     // Check if there are enough stocks to fulfill the order.
     for (BookOrderDTO bookOrderDto : orderDto.books()) {
 
-      BookStock book = bookStockService.getBookById(bookOrderDto.bookId());
+      Book book = bookService.getBookById(bookOrderDto.bookId());
       Integer stock = book.getStock();
       Integer orderQuantity = bookOrderDto.quantity();
 
@@ -106,20 +105,20 @@ public class OrderService {
   }
 
   /**
-   * Adds a {@link BookStock} to the order and returns the stock amount that needs to be left after
-   * the addition.
+   * Adds a {@link Book} to the order and returns the stock amount that needs to be left after the
+   * addition.
    *
    * @param order The {@link Order} to which the book belongs.
-   * @param bookStock The {@link BookStock} to be added.
+   * @param book The {@link Book} to be added.
    * @param quantity The quantity of books to be added.
    */
-  private Integer addBookToOrder(Order order, BookStock bookStock, Integer quantity) {
+  private Integer addBookToOrder(Order order, Book book, Integer quantity) {
 
     // Check if the book is already in the order.
     Set<BookOrder> books = order.getBooks();
-    books.add(new BookOrder(order, bookStock, quantity));
+    books.add(new BookOrder(order, book, quantity));
 
-    return bookStock.getStock() - quantity;
+    return book.getStock() - quantity;
   }
 
   /**
@@ -134,7 +133,7 @@ public class OrderService {
           try {
             // Update the stocks of the books in the order.
             logger.info("Starting async stock update for order: {}", orderId);
-            newBookStocks.forEach(bookStockService::updateBookStock);
+            newBookStocks.forEach(bookService::updateBookStock);
             logger.info("Finished async stock update for order: {}", orderId);
 
           } catch (Exception e) {

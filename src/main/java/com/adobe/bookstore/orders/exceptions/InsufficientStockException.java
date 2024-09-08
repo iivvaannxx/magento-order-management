@@ -1,12 +1,12 @@
 package com.adobe.bookstore.orders.exceptions;
 
-import com.adobe.bookstore.bookstock.BookStock;
+import com.adobe.bookstore.books.Book;
 import com.adobe.bookstore.orders.Order;
 
 /** Exception thrown when there is not enough stock to fulfill a {@link Order}. */
 public class InsufficientStockException extends RuntimeException {
 
-  /** The identifier of the {@link BookStock} that is not available. */
+  /** The identifier of the {@link Book} that is not available. */
   private final String bookId;
 
   /** The amount of books that were requested. */
@@ -18,7 +18,7 @@ public class InsufficientStockException extends RuntimeException {
   /**
    * Creates a new instance of the {@link InsufficientStockException} class.
    *
-   * @param bookId The identifier of the {@link BookStock} that is not available.
+   * @param bookId The identifier of the {@link Book} that is not available.
    * @param requestedQuantity The amount of books that were requested.
    * @param availableQuantity The amount of books that are available.
    */
@@ -33,7 +33,7 @@ public class InsufficientStockException extends RuntimeException {
     this.availableQuantity = availableQuantity;
   }
 
-  /** Returns the identifier of the {@link BookStock} that is not available. */
+  /** Returns the identifier of the {@link Book} that is not available. */
   public String getBookId() {
     return bookId;
   }

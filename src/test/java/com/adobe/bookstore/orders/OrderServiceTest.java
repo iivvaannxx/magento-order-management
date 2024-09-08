@@ -12,8 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
-import com.adobe.bookstore.bookstock.BookStock;
-import com.adobe.bookstore.bookstock.BookStockService;
+import com.adobe.bookstore.books.Book;
+import com.adobe.bookstore.books.BookService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
@@ -30,8 +30,8 @@ public class OrderServiceTest {
   /** The instance of {@link OrderService} used in the tests. */
   private OrderService orderService;
 
-  /** The mocked instance of {@link BookStockService} used in the tests. */
-  private BookStockService bookStockService;
+  /** The mocked instance of {@link BookService} used in the tests. */
+  private BookService bookService;
 
   /** The mocked instance of {@link OrderRepository} used in the tests. */
   private OrderRepository orderRepository;
@@ -43,10 +43,10 @@ public class OrderServiceTest {
   @BeforeEach
   public void setUp() {
     orderRepository = mock(OrderRepository.class);
-    bookStockService = mock(BookStockService.class);
+    bookService = mock(BookService.class);
     logger = mock(Logger.class);
 
-    orderService = new OrderService(orderRepository, bookStockService, logger);
+    orderService = new OrderService(orderRepository, bookService, logger);
   }
 
   /** Tests that the {@link OrderService#getAllOrders()} method works correctly. */
@@ -116,12 +116,12 @@ public class OrderServiceTest {
     int availableStock = 5;
 
     // Mock all the data.
-    BookStock book = new BookStock(bookId, "Some Book", availableStock);
+    Book book = new Book(bookId, "Some Book", availableStock);
     BookOrderDTO bookOrderDto = new BookOrderDTO(bookId, orderQuantity);
     NewOrderDTO newOrderDto = new NewOrderDTO(List.of(bookOrderDto));
 
     // Mock the repository interactions.
-    when(bookStockService.getBookById(bookId)).thenReturn(book);
+    when(bookService.getBookById(bookId)).thenReturn(book);
     when(orderRepository.save(any(Order.class)))
         .thenAnswer(
             invocation -> {
@@ -141,7 +141,7 @@ public class OrderServiceTest {
 
     // Verify number of invocations and concurrency when updating the stock.
     verify(orderRepository, times(1)).save(any(Order.class));
-    verify(bookStockService, timeout(1000)).updateBookStock(bookId, availableStock - orderQuantity);
+    verify(bookService, timeout(1000)).updateBookStock(bookId, availableStock - orderQuantity);
 
     // Verify that the logger was called,
     verify(logger).info("Starting async stock update for order: {}", orderId);
@@ -159,10 +159,10 @@ public class OrderServiceTest {
     int availableStock = 5;
     int requestedQuantity = 10;
 
-    BookStock book = new BookStock(bookId, "Some Book", availableStock);
+    Book book = new Book(bookId, "Some Book", availableStock);
     BookOrderDTO bookOrderDto = new BookOrderDTO(bookId, requestedQuantity);
     NewOrderDTO newOrderDto = new NewOrderDTO(List.of(bookOrderDto));
-    when(bookStockService.getBookById(bookId)).thenReturn(book);
+    when(bookService.getBookById(bookId)).thenReturn(book);
 
     assertThatThrownBy(() -> orderService.createOrder(newOrderDto))
         .isInstanceOf(InsufficientStockException.class)
@@ -172,7 +172,7 @@ public class OrderServiceTest {
                 bookId, requestedQuantity, availableStock));
 
     verify(orderRepository, times(0)).save(any());
-    verify(bookStockService, times(0)).updateBookStock(anyString(), anyInt());
+    verify(bookService, times(0)).updateBookStock(anyString(), anyInt());
   }
 
   /**
@@ -186,16 +186,16 @@ public class OrderServiceTest {
     int availableStock = 5;
     int requestedQuantity = 2;
 
-    BookStock book = new BookStock(bookId, "Some Book", availableStock);
+    Book book = new Book(bookId, "Some Book", availableStock);
     BookOrderDTO bookOrderDto = new BookOrderDTO(bookId, requestedQuantity);
     NewOrderDTO newOrderDto = new NewOrderDTO(List.of(bookOrderDto, bookOrderDto));
-    when(bookStockService.getBookById(bookId)).thenReturn(book);
+    when(bookService.getBookById(bookId)).thenReturn(book);
 
     assertThatThrownBy(() -> orderService.createOrder(newOrderDto))
         .isInstanceOf(OrderAlreadyContainsBook.class)
         .hasMessage(String.format("Order already contains book with id \"%s\"", bookId));
 
     verify(orderRepository, times(0)).save(any());
-    verify(bookStockService, times(0)).updateBookStock(anyString(), anyInt());
+    verify(bookService, times(0)).updateBookStock(anyString(), anyInt());
   }
 }

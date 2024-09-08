@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
-import com.adobe.bookstore.bookstock.BookStockService;
+import com.adobe.bookstore.books.BookService;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.dto.ResponseOrderDTO;
 import com.adobe.bookstore.orders.dto.SuccessfulOrderDTO;
@@ -38,8 +38,8 @@ public class OrderResourceWebMvcTest {
   /** The mocked instance of {@link OrderMapper} used in the tests. */
   @MockBean private OrderMapper orderMapper;
 
-  /** The mocked instance of {@link BookStockService} used in the tests. */
-  @MockBean private BookStockService bookStockService;
+  /** The mocked instance of {@link BookService} used in the tests. */
+  @MockBean private BookService bookService;
 
   /** The mocked instance of {@link Logger} used in the tests. */
   @MockBean private Logger logger;

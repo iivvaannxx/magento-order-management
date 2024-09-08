@@ -1,11 +1,11 @@
-package com.adobe.bookstore.bookstock;
+package com.adobe.bookstore.books;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
+import com.adobe.bookstore.books.exceptions.NonExistentBookException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +14,11 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-/** Unit tests for the {@link BookStockExceptionHandler} class. */
-class BookStockExceptionHandlerTest {
+/** Unit tests for the {@link BookExceptionHandler} class. */
+class BookExceptionHandlerTest {
 
-  /** The instance of {@link BookStockExceptionHandler} used in the tests. */
-  private BookStockExceptionHandler bookStockExceptionHandler;
+  /** The instance of {@link BookExceptionHandler} used in the tests. */
+  private BookExceptionHandler bookExceptionHandler;
 
   /** The mocked instance of {@link Logger} used in the tests. */
   private Logger logger;
@@ -27,12 +27,12 @@ class BookStockExceptionHandlerTest {
   @BeforeEach
   void setUp() {
     logger = mock(Logger.class);
-    bookStockExceptionHandler = new BookStockExceptionHandler(logger);
+    bookExceptionHandler = new BookExceptionHandler(logger);
   }
 
   /**
    * Tests that the {@link
-   * BookStockExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method is
+   * BookExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method is
    * annotated with the correct {@link ResponseStatus}.
    */
   @Test
@@ -40,7 +40,7 @@ class BookStockExceptionHandlerTest {
     assertDoesNotThrow(
         () -> {
           Method method =
-              BookStockExceptionHandler.class.getMethod(
+              BookExceptionHandler.class.getMethod(
                   "handleNonExistentBookException", NonExistentBookException.class);
           ResponseStatus annotation = method.getAnnotation(ResponseStatus.class);
           assertThat(annotation.value()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -49,13 +49,13 @@ class BookStockExceptionHandlerTest {
 
   /**
    * Tests that the {@link
-   * BookStockExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method
+   * BookExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method
    * returns a map with the correct error information.
    */
   @Test
   void handleNonExistentBookException_shouldReturnCorrectErrorMap() {
     NonExistentBookException ex = new NonExistentBookException("12345-67890");
-    Map<String, Object> result = bookStockExceptionHandler.handleNonExistentBookException(ex);
+    Map<String, Object> result = bookExceptionHandler.handleNonExistentBookException(ex);
 
     assertThat(result)
         .isNotNull()
@@ -65,13 +65,13 @@ class BookStockExceptionHandlerTest {
 
   /**
    * Tests that the {@link
-   * BookStockExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method logs
+   * BookExceptionHandler#handleNonExistentBookException(NonExistentBookException)} method logs
    * the error message correctly.
    */
   @Test
   void handleNonExistantBookException_shouldLogErrorMessage() {
     NonExistentBookException ex = new NonExistentBookException("12345-67890");
-    bookStockExceptionHandler.handleNonExistentBookException(ex);
+    bookExceptionHandler.handleNonExistentBookException(ex);
 
     verify(logger).error(ex.getMessage());
   }
