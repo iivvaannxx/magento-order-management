@@ -34,9 +34,10 @@ public class BookStockService {
         .findById(bookId)
         .orElseThrow(() -> new NonExistentBookException(bookId));
   }
-  
+
   /**
    * Returns all the {@link BookStock} in the repository.
+   *
    * @return A list of {@link BookStock} objects.
    */
   public List<BookStock> getAllBooks() {
@@ -60,7 +61,7 @@ public class BookStockService {
     }
 
     BookStock bookStock = this.getBookById(bookId);
-    bookStock.setQuantity(quantity);
+    bookStock.setStock(quantity);
     bookStockRepository.save(bookStock);
   }
 }

@@ -78,7 +78,7 @@ public class OrderResourceIntegrationTest {
     // The order was successfully created.
     assertThat(count).isEqualTo(1);
 
-    query = String.format("SELECT quantity FROM book_stock WHERE ID = '%s'", bookId);
+    query = String.format("SELECT stock FROM book_stock WHERE isbn = '%s'", bookId);
     Integer remainingStock = jdbcTemplate.queryForObject(query, Integer.class);
 
     // Initial stock is 7 and we ordered 2 books.
@@ -175,7 +175,7 @@ public class OrderResourceIntegrationTest {
   @Test
   @Sql(
       statements = {
-        "INSERT INTO book_stock (id, name, quantity) VALUES ('98765-43210', 'Another Book', 10)",
+        "INSERT INTO book_stock (isbn, title, stock) VALUES ('98765-43210', 'Another Book', 10)",
         "INSERT INTO orders (id) VALUES ('11111-22222')",
         "INSERT INTO orders (id) VALUES ('33333-44444')",
         "INSERT INTO orders (id) VALUES ('55555-66666')",
@@ -206,7 +206,7 @@ public class OrderResourceIntegrationTest {
   @Test
   @Sql(
       statements = {
-        "INSERT INTO book_stock (id, name, quantity) VALUES ('98765-43210', 'Another Book', 10)",
+        "INSERT INTO book_stock (isbn, title, stock) VALUES ('98765-43210', 'Another Book', 10)",
         "INSERT INTO orders (id) VALUES ('11111-22222')",
         "INSERT INTO book_orders (id, book_id, order_id, quantity) VALUES (default, '98765-43210', '11111-22222', 2)"
       },
@@ -246,7 +246,7 @@ public class OrderResourceIntegrationTest {
 
   /** Returns the URL of the {@link OrderResource} resource. */
   private String getOrdersUrl() {
-    return String.format("http://localhost:%d/orders", port);
+    return String.format("http://localhost:%d/api/orders", port);
   }
 
   /**
@@ -283,12 +283,12 @@ public class OrderResourceIntegrationTest {
   /**
    * Inserts a book stock in the database.
    *
-   * @param bookId The identifier of the book.
-   * @param name The name of the book.
-   * @param quantity The quantity of the book.
+   * @param isbn The identifier of the book.
+   * @param title The name of the book.
+   * @param stock The quantity of the book.
    */
-  private void insertBookStock(String bookId, String name, int quantity) {
+  private void insertBookStock(String isbn, String title, int stock) {
     jdbcTemplate.update(
-        "INSERT INTO book_stock (id, name, quantity) VALUES (?, ?, ?)", bookId, name, quantity);
+        "INSERT INTO book_stock (isbn, title, stock) VALUES (?, ?, ?)", isbn, title, stock);
   }
 }

@@ -39,9 +39,9 @@ class BookStockServiceTest {
     BookStock result = bookStockService.getBookById(bookId);
 
     assertThat(result).isNotNull();
-    assertThat(result.getId()).isEqualTo(book.getId());
-    assertThat(result.getName()).isEqualTo(book.getName());
-    assertThat(result.getQuantity()).isEqualTo(book.getQuantity());
+    assertThat(result.getIsbn()).isEqualTo(book.getIsbn());
+    assertThat(result.getTitle()).isEqualTo(book.getTitle());
+    assertThat(result.getStock()).isEqualTo(book.getStock());
 
     // Ensure that the repository was only called once.
     verify(bookStockRepository, times(1)).findById(bookId);
@@ -77,7 +77,7 @@ class BookStockServiceTest {
 
     // Check that the stock is updated correctly.
     bookStockService.updateBookStock(bookId, 5);
-    assertThat(book.getQuantity()).isEqualTo(5);
+    assertThat(book.getStock()).isEqualTo(5);
 
     // Ensure that the repository was only called once.
     verify(bookStockRepository, times(1)).findById(bookId);

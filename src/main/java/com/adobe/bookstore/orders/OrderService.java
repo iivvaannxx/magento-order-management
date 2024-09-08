@@ -80,20 +80,20 @@ public class OrderService {
     for (BookOrderDTO bookOrderDto : orderDto.books()) {
 
       BookStock book = bookStockService.getBookById(bookOrderDto.bookId());
-      Integer stock = book.getQuantity();
+      Integer stock = book.getStock();
       Integer orderQuantity = bookOrderDto.quantity();
 
-      if (!(bookIds.add(book.getId()))) {
-        throw new OrderAlreadyContainsBook(book.getId());
+      if (!(bookIds.add(book.getIsbn()))) {
+        throw new OrderAlreadyContainsBook(book.getIsbn());
       }
 
       // We can't fulfill the order if there are not enough stocks.
       if (stock < orderQuantity) {
-        throw new InsufficientStockException(book.getId(), orderQuantity, stock);
+        throw new InsufficientStockException(book.getIsbn(), orderQuantity, stock);
       }
 
       Integer newStock = addBookToOrder(order, book, orderQuantity);
-      newBookStocks.put(book.getId(), newStock);
+      newBookStocks.put(book.getIsbn(), newStock);
     }
 
     // Save the order immediately.
@@ -119,7 +119,7 @@ public class OrderService {
     Set<BookOrder> books = order.getBooks();
     books.add(new BookOrder(order, bookStock, quantity));
 
-    return bookStock.getQuantity() - quantity;
+    return bookStock.getStock() - quantity;
   }
 
   /**

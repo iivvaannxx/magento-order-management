@@ -137,7 +137,7 @@ public class OrderServiceTest {
     assertThat(result).isNotNull();
     assertThat(result.getId()).isEqualTo(orderId);
     assertThat(result.getBooks()).hasSize(1);
-    assertThat(result.getBooks().iterator().next().getBook().getId()).isEqualTo(bookId);
+    assertThat(result.getBooks().iterator().next().getBook().getIsbn()).isEqualTo(bookId);
 
     // Verify number of invocations and concurrency when updating the stock.
     verify(orderRepository, times(1)).save(any(Order.class));

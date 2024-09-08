@@ -53,9 +53,9 @@ class BookStockResourceIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(result).isNotNull();
-    assertThat(result.getId()).isEqualTo(expectedBookStock.getId());
-    assertThat(result.getName()).isEqualTo(expectedBookStock.getName());
-    assertThat(result.getQuantity()).isEqualTo(expectedBookStock.getQuantity());
+    assertThat(result.getIsbn()).isEqualTo(expectedBookStock.getIsbn());
+    assertThat(result.getTitle()).isEqualTo(expectedBookStock.getTitle());
+    assertThat(result.getStock()).isEqualTo(expectedBookStock.getStock());
   }
 
   /**
@@ -77,18 +77,18 @@ class BookStockResourceIntegrationTest {
    * @param bookId The identifier of the book.
    */
   private String getBookStockUrl(String bookId) {
-    return String.format("http://localhost:%d/books_stock/%s", port, bookId);
+    return String.format("http://localhost:%d/api/books_stock/%s", port, bookId);
   }
 
   /**
    * Inserts a book stock in the database.
    *
-   * @param bookId The identifier of the book.
-   * @param name The name of the book.
-   * @param quantity The quantity of the book.
+   * @param isbn The identifier of the book.
+   * @param title The name of the book.
+   * @param stock The quantity of the book.
    */
-  private void insertBookStock(String bookId, String name, int quantity) {
+  private void insertBookStock(String isbn, String title, int stock) {
     jdbcTemplate.update(
-        "INSERT INTO book_stock (id, name, quantity) VALUES (?, ?, ?)", bookId, name, quantity);
+        "INSERT INTO book_stock (isbn, title, stock) VALUES (?, ?, ?)", isbn, title, stock);
   }
 }

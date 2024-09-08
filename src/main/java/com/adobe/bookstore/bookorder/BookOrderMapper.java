@@ -18,6 +18,6 @@ public class BookOrderMapper {
       throw new IllegalArgumentException("Book order cannot be null.");
     }
 
-    return new BookOrderDTO(bookOrder.getBook().getId(), bookOrder.getQuantity());
+    return new BookOrderDTO(bookOrder.getBook().getIsbn(), bookOrder.getQuantity());
   }
 }

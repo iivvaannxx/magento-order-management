@@ -62,7 +62,7 @@ public class OrderResourceWebMvcTest {
               return new ResponseOrderDTO(order.getId(), List.of());
             });
 
-    mvc.perform(get("/orders/").accept(MediaType.APPLICATION_JSON))
+    mvc.perform(get("/api/orders/").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()").value(3))
@@ -85,7 +85,7 @@ public class OrderResourceWebMvcTest {
     when(orderService.getOrderById(orderId)).thenReturn(order);
     when(orderMapper.toResponseOrderDto(order)).thenReturn(responseOrderDTO);
 
-    mvc.perform(get(String.format("/orders/%s", orderId)).accept(MediaType.APPLICATION_JSON))
+    mvc.perform(get(String.format("/api/orders/%s", orderId)).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id").value(orderId));
@@ -103,7 +103,7 @@ public class OrderResourceWebMvcTest {
 
     // This time we have a Spring context running, so the exception handler is in the context.
     // It will catch the NonExistentOrderException and return a 404 response.
-    mvc.perform(get(String.format("/orders/%s", orderId)).accept(MediaType.APPLICATION_JSON))
+    mvc.perform(get(String.format("/api/orders/%s", orderId)).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.error").value("Order does not exist"))
@@ -128,7 +128,7 @@ public class OrderResourceWebMvcTest {
     when(orderMapper.toSuccessfulOrderDto(order)).thenReturn(expectedOrderDTO);
 
     mvc.perform(
-            post("/orders")
+            post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(newOrderDTO)))
         .andExpect(status().isOk())

@@ -17,16 +17,16 @@ public class BookStock {
 
   /** The unique identifier of the book. */
   @Id
-  @Column(name = "id", nullable = false)
-  private String id;
+  @Column(name = "isbn", nullable = false)
+  private String isbn;
 
   /** The name of the book. */
-  @Column(name = "name", nullable = false)
-  private String name;
+  @Column(name = "title", nullable = false)
+  private String title;
 
   /** The current stock of the book. */
-  @Column(name = "quantity", nullable = false)
-  private Integer quantity;
+  @Column(name = "stock", nullable = false)
+  private Integer stock;
 
   /** The set of {@link BookOrder} that have this {@link BookStock} as an item. */
   @OneToMany(mappedBy = "book")
@@ -35,21 +35,21 @@ public class BookStock {
   /**
    * Creates a new instance of the {@link BookStock} class.
    *
-   * @param id The unique identifier of the book.
-   * @param name The name of the book.
-   * @param quantity The current stock of the book.
+   * @param isbn The unique identifier of the book.
+   * @param title The name of the book.
+   * @param stock The current stock of the book.
    */
-  public BookStock(String id, String name, Integer quantity) {
-    this.id = id;
-    this.name = name;
-    this.quantity = quantity;
+  public BookStock(String isbn, String title, Integer stock) {
+    this.isbn = isbn;
+    this.title = title;
+    this.stock = stock;
   }
 
   public BookStock() {}
 
   /** Returns the unique identifier of the book. */
-  public String getId() {
-    return id;
+  public String getIsbn() {
+    return isbn;
   }
 
   /**
@@ -57,13 +57,13 @@ public class BookStock {
    *
    * @param id The new identifier.
    */
-  public void setId(String id) {
-    this.id = id;
+  public void setIsbn(String id) {
+    this.isbn = id;
   }
 
   /** Returns the name of the book. */
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
   /**
@@ -71,13 +71,13 @@ public class BookStock {
    *
    * @param name The new name.
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setTitle(String name) {
+    this.title = name;
   }
 
   /** Returns the stock quantity of the book. */
-  public Integer getQuantity() {
-    return quantity;
+  public Integer getStock() {
+    return stock;
   }
 
   /**
@@ -85,7 +85,7 @@ public class BookStock {
    *
    * @param quantity The new quantity.
    */
-  public void setQuantity(Integer quantity) {
-    this.quantity = quantity;
+  public void setStock(Integer quantity) {
+    this.stock = quantity;
   }
 }

@@ -46,14 +46,14 @@ public class OrderMapperTest {
 
     // Mock the internal mapper call.
     when(bookOrderMapper.toBookOrderDto(bookOrder))
-        .thenReturn(new BookOrderDTO(bookOrder.getBook().getId(), bookOrder.getQuantity()));
+        .thenReturn(new BookOrderDTO(bookOrder.getBook().getIsbn(), bookOrder.getQuantity()));
 
     ResponseOrderDTO result = orderMapper.toResponseOrderDto(order);
 
     assertThat(result).isNotNull();
     assertThat(result.id()).isEqualTo(order.getId());
     assertThat(result.books()).hasSize(1);
-    assertThat(result.books().get(0).bookId()).isEqualTo(bookOrder.getBook().getId());
+    assertThat(result.books().get(0).bookId()).isEqualTo(bookOrder.getBook().getIsbn());
     assertThat(result.books().get(0).quantity()).isEqualTo(bookOrder.getQuantity());
 
     verify(bookOrderMapper, times(1)).toBookOrderDto(bookOrder);

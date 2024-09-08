@@ -36,12 +36,13 @@ public class BookStockResourceWebMvcTest {
     when(bookStockService.getBookById(bookId)).thenReturn(expectedBookStock);
 
     // Mock the server response.
-    mvc.perform(get(String.format("/books_stock/%s", bookId)).accept(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            get(String.format("/api/books_stock/%s", bookId)).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id").value(bookId))
-        .andExpect(jsonPath("$.name").value("Some Book"))
-        .andExpect(jsonPath("$.quantity").value(10));
+        .andExpect(jsonPath("$.isbn").value(bookId))
+        .andExpect(jsonPath("$.title").value("Some Book"))
+        .andExpect(jsonPath("$.stock").value(10));
   }
 
   /**
@@ -56,7 +57,8 @@ public class BookStockResourceWebMvcTest {
 
     // This time we have a Spring context running, so the exception handler is in the context.
     // It will catch the NonExistentBookException and return a 404 response.
-    mvc.perform(get(String.format("/books_stock/%s", bookId)).accept(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            get(String.format("/api/books_stock/%s", bookId)).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.error").value("Book does not exist"))
