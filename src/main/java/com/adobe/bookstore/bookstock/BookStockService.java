@@ -2,6 +2,7 @@ package com.adobe.bookstore.bookstock;
 
 import com.adobe.bookstore.bookstock.exceptions.NonExistentBookException;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,14 @@ public class BookStockService {
     return bookStockRepository
         .findById(bookId)
         .orElseThrow(() -> new NonExistentBookException(bookId));
+  }
+  
+  /**
+   * Returns all the {@link BookStock} in the repository.
+   * @return A list of {@link BookStock} objects.
+   */
+  public List<BookStock> getAllBooks() {
+    return bookStockRepository.findAll();
   }
 
   /**

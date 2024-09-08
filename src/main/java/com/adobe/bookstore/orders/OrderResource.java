@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Defines the REST API for {@link Order} objects. */
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderResource {
 
   /** The logger instance for this class. */
