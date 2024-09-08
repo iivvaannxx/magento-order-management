@@ -4,18 +4,18 @@ You are currently on the main branch. This is just the starter code that was pro
 the assignment, without any modifications.
 
 > [!NOTE]
-> The original README with the assigment description can be found in
+> The original README with the assignment description can be found in
 > the [ASSIGNMENT.md](ASSIGNMENT.md) file.
 
 ## Solution
 
 To view the solution, please check out the following branches:
 
-### 1. `assigment` branch
+### 1. `assignment` branch
 
 > [!IMPORTANT]
 > This branch contains the core implementation that fulfills all the original
-> requirements. The code in this branch adheres to what was asked in the assigment.
+> requirements. The code in this branch adheres to what was asked in the assignment.
 > [View this branch here](https://github.com/iivvaannxx/magento-order-management/tree/assignment).
 
 The following features were implemented:
