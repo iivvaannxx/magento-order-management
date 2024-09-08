@@ -58,14 +58,14 @@ If you want to run the packaged application, you can download the latest
 release [from here](https://github.com/iivvaannxx/magento-order-management/releases/tag/1.0.0)
 and, provided you have **Java 17** installed, run the following command:
 
-```shell
+```bash
 $ java -jar bookstore.jar
 ```
 
 If you don't want to leave your terminal, you can run the packaged application executing
 only the 2 commands below, you'll need to have either `Java 17` installed or `docker`.
 
-```shell
+```bash
 # Download the packaged application from the releases page.
 $ curl -L https://github.com/iivvaannxx/magento-order-management/releases/download/1.0.0/bookstore.jar -o bookstore.jar
 
@@ -79,7 +79,7 @@ $ docker run --rm -p 8080:8080 -v "$(pwd)/bookstore.jar:/app/bookstore.jar" open
 If you want to run the application from the source code, you only need the two commands
 below, and it is not necessary to have anything installed (except for `git`):
 
-```shell
+```bash
 $ git clone https://github.com/iivvaannxx/magento-order-management.git && cd magento-order-management
 $ ./mvnw spring-boot:run # or ".\mvnw.cmd spring-boot:run" on Windows.
 ```
@@ -87,7 +87,7 @@ $ ./mvnw spring-boot:run # or ".\mvnw.cmd spring-boot:run" on Windows.
 ## Technologies Used
 
 > [!IMPORTANT]
-> About Nix: I am used to create and manage my development environments using a tool
+> **About Nix**: I am used to create and manage my development environments using a tool
 > called [devenv](https://devenv.sh/), that is built
 > upon [Nix](https://nix.dev/tutorials/nix-language.html)
 > and [Nix Flakes](https://www.tweag.io/blog/2020-05-25-flakes/). Those 3
@@ -120,7 +120,7 @@ the [releases page](https://github.com/iivvaannxx/magento-order-management/relea
 
 You can also generate the documentation locally by running the following command:
 
-```shell
+```bash
 $ ./mvnw javadoc:javadoc
 ```
 
@@ -153,6 +153,10 @@ be better to use a database that is more robust and has a better support for con
 
 The application uses a file-based H2 database, which is created upon start. Every time
 the application starts, it will drop the database and create a new one.
+
+Here's a diagram of the database schema (generated using [drawSQL](https://drawsql.app/)):
+
+![Database Schema](.github/assets/diagram.png)
 
 ### Models
 
@@ -205,10 +209,6 @@ The application exposes the following endpoints:
   that specific book. If the order is valid, it returns a `SuccessfulOrderDTO` object
   containing the `orderId` of the newly created order.
 
-    - See [Exception Handling](#exception-handling-and-validation) for more information on
-      what happens
-      if the order is invalid.
-
   ```
   Example: POST /orders "{ "books": [{ "bookId": "ae1666d6-6100-4ef0-9037-b45dd0d5bb0e", "quantity": 2 }]
   ```
@@ -254,7 +254,7 @@ in Node.js and Promises), and it was the most conceptually easy to understand. Y
 create a normal synchronous update operation, but you run it in a separate thread using a
 `CompletableFuture`. This also simplified later testing.
 
-> [!NOTE]
+> [!TIP]
 > To help checking it the stock update are actually asynchronous, I added basic logging to
 > my implementation. You can check the source
 >
@@ -347,7 +347,7 @@ the functionalities of the application and situations I could think of.
 
 To run the tests, you need to clone the repository and run the following command:
 
-```shell
+```bash
 $ ./mvnw clean test
 ```
 
@@ -362,8 +362,8 @@ follow this naming convention:
 There are unit tests for all the classes that contain some logic, including `Mapper`,
 `Service`, `ExceptionHandler`, and `Resource` classes.
 
-The `Resource` classes are tested in two different ways (
-see [this guide](https://thepracticaldeveloper.com/guide-spring-boot-controller-tests/)
+The `Resource` classes are tested in two different ways (see
+[this guide](https://thepracticaldeveloper.com/guide-spring-boot-controller-tests/)
 for more details):
 
 - Slice tests using the `MockMvc` class from Spring to test the REST API endpoints. Which
