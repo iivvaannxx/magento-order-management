@@ -54,7 +54,7 @@ public class OrderResourceIntegrationTest {
    * is valid.
    */
   @Test
-  void newOrder_whenOrderIsValid_shouldReturnSuccessfulOrder() {
+  void newOrder_whenOrderIsValid_shouldReturnSuccessfulOrder() throws InterruptedException {
 
     String bookId = "12345-67890";
     int orderedQuantity = 2;
@@ -77,6 +77,10 @@ public class OrderResourceIntegrationTest {
 
     // The order was successfully created.
     assertThat(count).isEqualTo(1);
+
+    // Workaround: The async update causes the CI/CD pipeline to fail sometimes
+    // because the stock is not updated yet. Wait a little before checking the stock.
+    Thread.sleep(100);
 
     query = String.format("SELECT stock FROM books WHERE isbn = '%s'", bookId);
     Integer remainingStock = jdbcTemplate.queryForObject(query, Integer.class);

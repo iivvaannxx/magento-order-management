@@ -162,9 +162,7 @@ public class OrderService {
 
     // Check if the book is already in the order.
     Set<BookOrder> books = order.getBooks();
-    boolean added = books.add(new BookOrder(order, book, quantity));
-
-    logger.info("Added book {} to order {}? {}", book.getIsbn(), order.getId(), added);
+    books.add(new BookOrder(order, book, quantity));
 
     return book.getStock() - quantity;
   }
