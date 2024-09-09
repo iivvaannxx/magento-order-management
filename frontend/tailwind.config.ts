@@ -1,6 +1,10 @@
+import defaultTheme from "tailwindcss/defaultTheme";
+import pluginAnimate from "tailwindcss-animate";
+
+/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: ["./src/**/*.{js,ts,jsx,tsx}", "./index.html"],
+  content: ["./source/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
       borderRadius: {
@@ -50,7 +54,10 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
+      fontFamily: {
+        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [pluginAnimate],
 };

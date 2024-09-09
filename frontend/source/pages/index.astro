@@ -1,0 +1,12 @@
+---
+import { BookList } from "../components/bookstore/book-list";
+
+import MainLayout from "../layouts/main-layout.astro";
+---
+
+<MainLayout
+  currentPage="home"
+  title="Bookstore Application"
+>
+  <BookList client:only="react" />
+</MainLayout>

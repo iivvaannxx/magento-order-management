@@ -1,0 +1,75 @@
+---
+import "@/assets/index.css";
+import { CurrentOrder } from "../components/bookstore/current-order";
+
+import { ViewTransitions } from "astro:transitions";
+
+export interface Props {
+  title: string;
+  currentPage: string;
+}
+
+const { title, currentPage } = Astro.props;
+---
+
+<html
+  lang="en"
+  class="dark"
+>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width"
+    />
+    <meta
+      name="generator"
+      content={Astro.generator}
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body class="m-0 p-0">
+    <header
+      class="sticky top-0 z-20 mx-auto flex w-full max-w-screen-xl items-center justify-between bg-background text-foreground"
+    >
+      <div class="p-12">
+        <a
+          href="/"
+          class={`text-xl font-bold ${currentPage === "home" ? "text-primary underline underline-offset-4" : "text-foreground/60"}`}
+          >Bookstore</a
+        >
+        <a
+          href="/orders"
+          class={`ml-4 text-xl font-bold ${currentPage === "orders" ? "text-primary underline underline-offset-4" : "text-foreground/60"}`}
+          >Orders</a
+        >
+      </div>
+      <div class="mr-12">
+        <CurrentOrder client:only="react" />
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-screen-xl p-12">
+      <slot />
+    </main>
+  </body>
+</html>

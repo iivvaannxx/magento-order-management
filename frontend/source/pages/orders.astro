@@ -1,0 +1,12 @@
+---
+import { OrderList } from "../components/bookstore/order-list";
+
+import MainLayout from "../layouts/main-layout.astro";
+---
+
+<MainLayout
+  currentPage="orders"
+  title="Orders"
+>
+  <OrderList client:only="react" />
+</MainLayout>
