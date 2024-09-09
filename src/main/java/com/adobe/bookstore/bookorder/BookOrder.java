@@ -119,6 +119,8 @@ public class BookOrder {
       return false;
     }
 
-    return Objects.equals(id, other.id);
+    return Objects.equals(id, other.id)
+        && Objects.equals(order.getId(), other.order.getId())
+        && Objects.equals(book.getIsbn(), other.book.getIsbn());
   }
 }

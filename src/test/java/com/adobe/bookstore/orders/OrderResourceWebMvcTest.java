@@ -62,7 +62,7 @@ public class OrderResourceWebMvcTest {
               return new ResponseOrderDTO(order.getId(), List.of());
             });
 
-    mvc.perform(get("/api/orders/").accept(MediaType.APPLICATION_JSON))
+    mvc.perform(get("/api/orders").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()").value(3))

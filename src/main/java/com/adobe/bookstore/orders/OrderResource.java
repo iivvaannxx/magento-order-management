@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,5 +77,16 @@ public class OrderResource {
     logger.info("Created new order: {}", newOrder.getId());
 
     return ResponseEntity.ok(orderMapper.toSuccessfulOrderDto(newOrder));
+  }
+
+  /**
+   * Deletes the {@link Order} with the given identifier.
+   *
+   * @param orderId The identifier of the {@link Order} to delete.
+   */
+  @DeleteMapping("{orderId}")
+  public ResponseEntity<Void> deleteOrder(@PathVariable String orderId) {
+    orderService.deleteOrderById(orderId);
+    return ResponseEntity.noContent().build();
   }
 }

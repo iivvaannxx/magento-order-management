@@ -11,9 +11,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.adobe.bookstore.UpdateController;
 import com.adobe.bookstore.bookorder.dto.BookOrderDTO;
 import com.adobe.bookstore.books.Book;
 import com.adobe.bookstore.books.BookService;
+import com.adobe.bookstore.books.BookStockUpdateStrategy;
 import com.adobe.bookstore.orders.dto.NewOrderDTO;
 import com.adobe.bookstore.orders.exceptions.InsufficientStockException;
 import com.adobe.bookstore.orders.exceptions.NonExistentOrderException;
@@ -39,14 +41,18 @@ public class OrderServiceTest {
   /** The mocked instance of {@link Logger} used in the tests. */
   private Logger logger;
 
+  /** The mocked instance of {@link UpdateController} used in the tests. */
+  private UpdateController UpdateController;
+
   /** Runs before each test. */
   @BeforeEach
   public void setUp() {
     orderRepository = mock(OrderRepository.class);
     bookService = mock(BookService.class);
     logger = mock(Logger.class);
+    UpdateController = mock(UpdateController.class);
 
-    orderService = new OrderService(orderRepository, bookService, logger);
+    orderService = new OrderService(orderRepository, bookService, logger, UpdateController);
   }
 
   /** Tests that the {@link OrderService#getAllOrders()} method works correctly. */
@@ -114,14 +120,18 @@ public class OrderServiceTest {
     String orderId = "111111-22222";
     int orderQuantity = 2;
     int availableStock = 5;
+    int remainingStock = availableStock - orderQuantity;
 
     // Mock all the data.
     Book book = new Book(bookId, "Some Book", availableStock);
     BookOrderDTO bookOrderDto = new BookOrderDTO(bookId, orderQuantity);
     NewOrderDTO newOrderDto = new NewOrderDTO(List.of(bookOrderDto));
 
-    // Mock the repository interactions.
+    // Mock the repository and service interactions.
     when(bookService.getBookById(bookId)).thenReturn(book);
+    when(bookService.updateBookStock(bookId, remainingStock, BookStockUpdateStrategy.REPLACE))
+        .thenReturn(remainingStock);
+
     when(orderRepository.save(any(Order.class)))
         .thenAnswer(
             invocation -> {
@@ -141,9 +151,11 @@ public class OrderServiceTest {
 
     // Verify number of invocations and concurrency when updating the stock.
     verify(orderRepository, times(1)).save(any(Order.class));
-    verify(bookService, timeout(1000)).updateBookStock(bookId, availableStock - orderQuantity);
+    verify(bookService, timeout(1000))
+        .updateBookStock(bookId, remainingStock, BookStockUpdateStrategy.REPLACE);
+    verify(UpdateController, timeout(1000)).sendStockUpdate(bookId, remainingStock);
 
-    // Verify that the logger was called,
+    // Verify that the logger was called
     verify(logger).info("Starting async stock update for order: {}", orderId);
     verify(logger).info("Finished async stock update for order: {}", orderId);
   }
@@ -173,6 +185,7 @@ public class OrderServiceTest {
 
     verify(orderRepository, times(0)).save(any());
     verify(bookService, times(0)).updateBookStock(anyString(), anyInt());
+    verify(UpdateController, times(0)).sendStockUpdate(anyString(), anyInt());
   }
 
   /**
