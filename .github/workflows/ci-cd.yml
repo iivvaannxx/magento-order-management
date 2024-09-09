@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: [ "assignment-extra" ]
+    paths:
+      - 'src/**'
+      - 'frontend/**'
+      - '.github/workflows/**'
+      - 'Dockerfile'
+      - 'pom.xml'
 
 jobs:
   build-and-deploy:
@@ -17,6 +23,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
