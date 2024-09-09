@@ -1,0 +1,67 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: |
+          pnpm install
+          pnpm run build
+
+      - name: Build and test Spring Boot application
+        run: ./mvnw clean package
+
+      - name: Build Image and Push to Docker Hub
+        env:
+          DOCKER_REPOSITORY: iivvaannx/bookstore
+
+        run: |
+          docker build -t $DOCKER_REPOSITORY:${{ github.sha }} .
+          
+          # Also add the "latest" tag
+          docker tag $DOCKER_REPOSITORY:${{ github.sha }} $DOCKER_REPOSITORY:latest
+          echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          
+          # Push both tags.
+          docker push $DOCKER_REPOSITORY:${{ github.sha }}
+          docker push $DOCKER_REPOSITORY:latest
