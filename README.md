@@ -6,7 +6,7 @@
 
 > [!IMPORTANT]
 > This branch is built on top of the
-> [assignment branch](https://github.com/iivvaannxx/magento-order-management/tree/assignment-extra).
+> [assignment branch](https://github.com/iivvaannxx/magento-order-management/tree/assignment).
 > It extends that solution with a frontend application that can be used to play with the
 > API. Make sure to check out that branch for the original solution.
 
