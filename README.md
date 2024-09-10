@@ -33,9 +33,10 @@ features that are not part of the original requirements.
 
 Aside from the original features, this branch adds the following:
 
-- A simple frontend application that interacts with the backend API.
-- A new endpoint to delete an order.
-- A simple CI/CD pipeline that runs on GitHub Actions.
+A simple frontend application that interacts with the backend API.
+A new endpoint to DELETE an order (and also update the stock asynchrnously).
+A simple CI/CD pipeline that runs on GitHub Actions and builds the app to a Docker image.
+Real-time updates using Server-Sent Events (SSE).
 
 My initial idea was to create a CI/CD pipeline that would run on a self-hosted Jenkins
 server and deploy the application to AWS, in order to align more closely with the
@@ -45,7 +46,8 @@ on the internet would have required setting up a full production environment, an
 potentially some authentication as well (due to the nature of the application).
 
 Therefore, I decided to go with a simpler approach: a CI/CD pipeline that would run on
-GitHub Actions and package the application as a Docker image.
+GitHub Actions and package the application as a Docker image, which is then published to
+Docker Hub.
 
 ## How to run
 
@@ -55,9 +57,8 @@ The application is packaged as a Docker image and can be run using the following
 $ docker run -p 8080:8080 iivvaannx/bookstore:latest
 ``` 
 
-Docker will automatically download the image from Docker Hub and start the application,
-you can access
-it in your browser at [http://localhost:8080](http://localhost:8080).
+Docker will automatically download the image from Docker Hub and start the application.
+You can access it in your browser at [http://localhost:8080](http://localhost:8080).
 
 ## How to use
 
@@ -81,7 +82,7 @@ button.
   <img src=".github/assets/current-order.png" alt="Current Order" />
 </div>
 
-After placing the order, you'll be able you can go to the "Orders" page to see the
+After placing the order, you can go to the "Orders" page to see the
 list of orders and their details. You can also delete an order by clicking the delete
 button at the right of every listed order.
 
@@ -89,16 +90,16 @@ button at the right of every listed order.
 
 The application is build so that it syncs across different browser tabs. This means that
 if you place an order, add books to the current order, or delete an order from a browser
-tab,
-the changes will be reflected in other tabs as well.
+tab, the changes will be reflected in other tabs as well.
 
 This is done by using the `localStorage` API and Server-Sent
 Events ([SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)). I
 implemented a very basic SSE Controller in the backend that sends updates whenever the
 following happens:
 
-- The stock of a book is updated (due to a new order)
-- An order is created or deleted.
+- The stock of a book is updated (due to a new order or a deletion) -> Update the stock in
+  the UI.
+- An order is created or deleted -> Update the order list in the UI.
 
 The frontend listens to these events and updates the UI accordingly.
 
@@ -111,5 +112,5 @@ easiest way to serve a website using Spring Boot is to serve static files from t
 
 In order to make the application usable, it was necessary to make changes to the
 `BookStock` entity, which I renamed to `Book` and added extra fields to it. Then I used a
-public book api to retrieve some data and change the `import.sql` file to populate the
-database with this data.
+public [Book API](https://openlibrary.org/developers/api) to change
+the `import.sql` file and populate the database with some real book data.
