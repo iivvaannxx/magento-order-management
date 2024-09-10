@@ -108,7 +108,7 @@ $ ./mvnw spring-boot:run # or ".\mvnw.cmd spring-boot:run" on Windows.
 
 ## Design Decisions and Assumptions
 
-Below I outline the principal design decision I made during the development. Feel free
+Below I outline the principal design decisions I made during the development. Feel free
 to reach out to me if you have any questions or something is not clear.
 
 ### Documentation
@@ -135,8 +135,8 @@ documentation [below](#api-endpoints).
 
 ### Refactoring the Initial Source Code
 
-I did a small refactoring of the initial source code for the sake of consistency with I
-was going to implement. This only included the following changes:
+I did a small refactoring of the initial source code for the sake of consistency with what
+I was going to implement. This only included the following changes:
 
 - Move the `BookStock` model and all its related code to the `bookstock` package.
 
@@ -210,7 +210,7 @@ The application exposes the following endpoints:
   containing the `orderId` of the newly created order.
 
   ```
-  Example: POST /orders "{ "books": [{ "bookId": "ae1666d6-6100-4ef0-9037-b45dd0d5bb0e", "quantity": 2 }]
+  Example: POST /orders "{ "books": [{ "bookId": "ae1666d6-6100-4ef0-9037-b45dd0d5bb0e", "quantity": 2 }] }"
   ```
 
 - `GET /orders` and `GET /orders/`: Normally I would just create an endpoint without a
@@ -255,10 +255,9 @@ create a normal synchronous update operation, but you run it in a separate threa
 `CompletableFuture`. This also simplified later testing.
 
 > [!TIP]
-> To help checking it the stock update are actually asynchronous, I added basic logging to
-> my implementation. You can check the source
->
-code [here](https://github.com/iivvaannxx/magento-order-management/blob/2f6ca4fcce6e1e17dabb681842a67e38acb4b82f/src/main/java/com/adobe/bookstore/orders/OrderService.java#L131).
+> To help checking if the stock updates are actually asynchronous, I added basic logging
+> to my implementation. You can check the source code
+> [here](https://github.com/iivvaannxx/magento-order-management/blob/2f6ca4fcce6e1e17dabb681842a67e38acb4b82f/src/main/java/com/adobe/bookstore/orders/OrderService.java#L131).
 
 #### Potential Race Condition
 
