@@ -47,5 +47,7 @@ original requirements.
 Aside from the original features, this branch adds the following:
 
 - A simple frontend application that interacts with the backend API.
-- A new endpoint to DELETE an order.
-- A simple CI/CD pipeline that runs on GitHub Actions.
+- A new endpoint to DELETE an order (and also update the stock asynchrnously).
+- A simple CI/CD pipeline that runs on GitHub Actions and builds the app to a Docker
+  image.
+- Real-time updates using Server-Sent Events (SSE).
